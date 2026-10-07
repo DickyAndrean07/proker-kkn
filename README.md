@@ -200,7 +200,7 @@ proker-kkn/
 ## Pengembang
 
 **M. Dicky Andrean**
-GitHub: [@karangsawo123](https://github.com/karangsawo123) · Email: karangsawo123@gmail.com
+GitHub: [@karangsawo123](https://github.com/karangsawo123) · LinkedIn: [linkedin.com/in/DickyAndrean](https://www.linkedin.com/in/DickyAndrean) · Email: karangsawo123@gmail.com
 
 ---
 
