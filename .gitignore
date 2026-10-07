@@ -35,3 +35,9 @@ Thumbs.db
 # Handover Generated Binaries
 /docs/07-handover/04-final-book/docx/*.docx
 
+
+# Secrets & scratch
+/src/template.env
+/confoh_README.md
+/src/public/peta-desa-redesign-options.html
+/opencode.json
