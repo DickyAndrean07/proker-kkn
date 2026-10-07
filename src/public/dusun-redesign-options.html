@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3 Opsi Transisi & Desain Seksi Pilihan Dusun - Desa Bendung</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --forest-950: #07170e;
+            --forest-900: #0d2217;
+            --forest-800: #143524;
+            --forest-700: #1e4d35;
+            --forest-600: #2a6848;
+            --forest-500: #3b8e60;
+            --forest-100: #eaf3ed;
+            --forest-50:  #f3f8f5;
+
+            --sand-50:  #fbf9f5;
+            --sand-100: #f5f0e6;
+            --sand-200: #e8dfce;
+            --sand-300: #d8cbb4;
+
+            --gold-600: #b58125;
+            --gold-500: #c99333;
+            --gold-400: #dfad4d;
+            --gold-100: #fbf3e2;
+
+            --cream-bg: #f9f7f2;
+            --cream-surface: #ffffff;
+            --cream-border: #e8dfcf;
+
+            --text-primary: #15221a;
+            --text-secondary: #526358;
+            --text-muted: #829288;
+
+            --font-serif: 'Fraunces', Georgia, serif;
+            --font-editorial: 'Lora', Georgia, serif;
+            --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: #0d1712;
+            color: #e4ebe6;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* TOP CONTROL BAR (PREVIEW CONTROLS) */
+        .preview-topbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(13, 34, 23, 0.95);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(201, 147, 51, 0.35);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+        }
+
+        .preview-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .preview-brand-badge {
+            background: var(--gold-500);
+            color: #0d2015;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .preview-brand-title {
+            font-family: var(--font-serif);
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        /* OPTION SELECTOR TABS */
+        .options-tabs {
+            display: flex;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 999px;
+            padding: 3px;
+            gap: 4px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: #9cb1a5;
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 7px 16px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .tab-btn.active {
+            background: var(--gold-500);
+            color: #0d2015;
+            font-weight: 800;
+            box-shadow: 0 2px 10px rgba(201, 147, 51, 0.4);
+        }
+
+        /* DEVICE VIEWPORT TOGGLE */
+        .viewport-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .view-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #d1ded6;
+            font-size: 11.5px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .view-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
+        .view-btn.active {
+            background: #2a6848;
+            color: #ffffff;
+            border-color: #3b8e60;
+        }
+
+        /* MAIN CANVAS WRAPPER */
+        .canvas-container {
+            display: flex;
+            justify-content: center;
+            padding: 24px 16px 60px;
+            min-height: calc(100vh - 70px);
+            background: radial-gradient(circle at 50% 10%, #162f22 0%, #09130d 100%);
+        }
+
+        /* SIMULATOR FRAME */
+        .viewport-frame {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--sand-50);
+            color: var(--text-primary);
+            border-radius: 28px;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            transition: max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .viewport-frame.mode-mobile-sm {
+            max-width: 375px;
+            border-radius: 42px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.75), 0 0 0 8px #1f2b23;
+        }
+
+        .viewport-frame.mode-mobile-lg {
+            max-width: 414px;
+            border-radius: 42px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.75), 0 0 0 8px #1f2b23;
+        }
+
+        /* REALISTIC PHONE TOP STATUS BAR */
+        .phone-notch-bar {
+            display: none;
+            background: #141f18;
+            color: #ffffff;
+            padding: 8px 24px 6px;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .mode-mobile-sm .phone-notch-bar,
+        .mode-mobile-lg .phone-notch-bar {
+            display: flex;
+        }
+
+        /* HERO SIMULATION BACKGROUND */
+        .hero-simulation {
+            position: relative;
+            background: linear-gradient(180deg, #10261a 0%, #1e4531 100%);
+            color: #ffffff;
+            padding: 30px 20px 54px;
+            text-align: center;
+        }
+
+        .hero-tag {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gold-400);
+            margin-bottom: 6px;
+        }
+
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: clamp(20px, 4vw, 32px);
+            font-weight: 700;
+            line-height: 1.25;
+            color: #ffffff;
+        }
+
+        /* SHARED QUICK DOCK BASE */
+        .dock-container {
+            position: relative;
+            z-index: 20;
+            margin-top: -32px;
+            padding: 0 16px;
+        }
+
+        .quick-dock-card {
+            background: #ffffff;
+            border: 1px solid rgba(20, 58, 36, 0.1);
+            border-radius: 20px;
+            padding: 12px 14px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            box-shadow: 0 10px 28px rgba(13, 34, 23, 0.12);
+        }
+
+        .mode-mobile-sm .quick-dock-card,
+        .mode-mobile-lg .quick-dock-card {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 12px 10px;
+        }
+
+        .dock-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 4px;
+            border-radius: 12px;
+            background: #faf8f4;
+            border: 1px solid #eee7db;
+            color: var(--forest-900);
+            text-decoration: none;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .dock-item.active {
+            background: #eef6f0;
+            border-color: #3b8e60;
+            color: var(--forest-800);
+            font-weight: 700;
+        }
+
+        .dock-icon {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        .dock-label {
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .dock-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #e11d48;
+            color: #ffffff;
+            font-size: 9px;
+            font-weight: 800;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid #ffffff;
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           SWITCHABLE OPTION PANELS
+           ══════════════════════════════════════════════════════════════════ */
+        .option-panel {
+            display: none;
+        }
+
+        .option-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           OPSI A: "GROUNDED CIVIC CANVAS" (KONEKTOR KANVAS TERPADU & RAPI)
+           - Solusi: Quick Dock tidak lagi mengambang hampa di atas cream.
+           - Seksi Dusun dibingkai dengan latar bergradasi lembut dan header
+             yang menyatu mulus langsung di bawah dock.
+           ══════════════════════════════════════════════════════════════════ */
+        .opt-a-wrapper {
+            background: linear-gradient(180deg, #f7f3ea 0%, #fcfbf9 100%);
+            padding: 24px 16px 44px;
+            position: relative;
+        }
+
+        /* Subtle connector bar right under the dock */
+        .opt-a-dock-bridge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            margin-bottom: 18px;
+        }
+
+        .opt-a-dock-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #ffffff;
+            border: 1px solid #e2d7c5;
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--forest-700);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .opt-a-dock-pill span.dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #3b8e60;
+        }
+
+        /* Clean, aligned header bar */
+        .opt-a-head {
+            background: #ffffff;
+            border: 1px solid #e7dfd2;
+            border-radius: 18px;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 16px rgba(18, 48, 30, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .opt-a-title-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .opt-a-eyebrow {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gold-600);
+            margin-bottom: 3px;
+        }
+
+        .opt-a-title {
+            font-family: var(--font-serif);
+            font-size: 21px;
+            font-weight: 700;
+            color: var(--forest-950);
+            line-height: 1.2;
+        }
+
+        .opt-a-sub {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            line-height: 1.45;
+        }
+
+        .opt-a-action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #1e4d35;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 9px 16px;
+            border-radius: 10px;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(30, 77, 53, 0.25);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .opt-a-action-btn:hover {
+            background: var(--forest-900);
+            transform: translateY(-1px);
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           OPSI B: "CURVED FOREST EMBRACE" (LENGKUNGAN ORGANIK & TRANSISI MEWAH)
+           - Solusi: Quick Nav 'dipeluk' oleh lengkungan latar hijau botol
+             atau aksen lengkung anggun sehingga tidak ada patahan visual.
+           ══════════════════════════════════════════════════════════════════ */
+        .opt-b-wrapper {
+            padding: 0 16px 44px;
+            position: relative;
+        }
+
+        .opt-b-arc-bg {
+            position: relative;
+            background: linear-gradient(180deg, #173b28 0%, #10291c 100%);
+            border-radius: 28px;
+            padding: 24px 18px 24px;
+            margin-top: 14px;
+            margin-bottom: 22px;
+            color: #ffffff;
+            box-shadow: 0 12px 32px rgba(13, 34, 23, 0.25);
+            overflow: hidden;
+        }
+
+        .opt-b-arc-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, rgba(201, 147, 51, 0.25) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .opt-b-head-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .opt-b-badge {
+            background: rgba(201, 147, 51, 0.25);
+            color: #f7d58b;
+            border: 1px solid rgba(201, 147, 51, 0.4);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+
+        .opt-b-title {
+            font-family: var(--font-serif);
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .opt-b-desc {
+            font-size: 12.5px;
+            color: #c9ded2;
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+
+        .opt-b-pills-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            padding-top: 12px;
+        }
+
+        .opt-b-stats {
+            font-size: 12px;
+            color: #dbeae0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .opt-b-map-link {
+            background: #ffffff;
+            color: #10291c;
+            font-size: 11.5px;
+            font-weight: 800;
+            padding: 6px 14px;
+            border-radius: 999px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+
+        .opt-b-map-link:hover {
+            background: var(--gold-400);
+            color: #0d2015;
+            transform: translateX(2px);
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           OPSI C: "INTEGRATED CONSOLE DOCK" (TRANSISI TAB POINTER & HEADER MINIMALIS)
+           - Solusi: Quick Dock memiliki 'Notch/Pointer' yang menunjuk langsung
+             ke konten dusun, menjadikannya satu kesatuan sistem aplikasi.
+           - Header dibuat ultra-kompak, presisi, dan tidak boros ruang.
+           ══════════════════════════════════════════════════════════════════ */
+        .opt-c-wrapper {
+            padding: 0 16px 44px;
+            position: relative;
+        }
+
+        /* Pointer arrow under active dock */
+        .opt-c-pointer-bridge {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 36px;
+            margin-top: -6px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 25;
+        }
+
+        .mode-mobile-sm .opt-c-pointer-bridge,
+        .mode-mobile-lg .opt-c-pointer-bridge {
+            padding-left: 20px;
+        }
+
+        .opt-c-caret {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid #ffffff;
+            filter: drop-shadow(0 -2px 3px rgba(0,0,0,0.06));
+        }
+
+        /* Compact, modern app-like header */
+        .opt-c-header-strip {
+            background: #ffffff;
+            border: 1px solid #e7ded0;
+            border-radius: 16px;
+            padding: 14px 16px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+
+        .opt-c-top-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .opt-c-badge-pill {
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--forest-700);
+            background: #eef6f0;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .opt-c-map-chip {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--forest-700);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .opt-c-map-chip:hover {
+            color: var(--forest-900);
+            text-decoration: underline;
+        }
+
+        .opt-c-main-title {
+            font-family: var(--font-serif);
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--forest-950);
+            line-height: 1.2;
+        }
+
+        .opt-c-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           SHARED CARD PRESENTATION (CLEAN & BALANCED)
+           ══════════════════════════════════════════════════════════════════ */
+        .shared-dusun-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .mode-mobile-sm .shared-dusun-grid,
+        .mode-mobile-lg .shared-dusun-grid {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .demo-card {
+            background: #ffffff;
+            border: 1px solid #e8dfd1;
+            border-radius: 16px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            transition: all 0.2s ease;
+        }
+
+        .demo-card:hover {
+            border-color: var(--forest-600);
+            box-shadow: 0 8px 20px rgba(18, 48, 30, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .demo-num-box {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #f4efe4;
+            color: var(--forest-900);
+            font-size: 13px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid #e5dac6;
+        }
+
+        .demo-card-body {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .demo-card-title-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+
+        .demo-card-title {
+            font-family: var(--font-serif);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--forest-950);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .demo-card-chip {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 6px;
+            background: #eef6f0;
+            color: #1e5235;
+        }
+
+        .demo-card-desc {
+            font-size: 11.5px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .demo-arrow {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f4efe4;
+            color: var(--forest-800);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .demo-card:hover .demo-arrow {
+            background: var(--forest-700);
+            color: #ffffff;
+            transform: translateX(3px);
+        }
+
+        /* EXPLANATION FOOTER */
+        .explanation-card {
+            margin: 24px 16px 10px;
+            padding: 18px 20px;
+            background: #ffffff;
+            border: 1px solid #e5dccf;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+        }
+
+        .exp-title {
+            font-family: var(--font-serif);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--forest-900);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .exp-points {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-left: 20px;
+        }
+
+        .exp-points li {
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOPBAR CONTROLS -->
+    <header class="preview-topbar">
+        <div class="preview-brand">
+            <span class="preview-brand-badge">Eksplorasi Transisi</span>
+            <h1 class="preview-brand-title">Transisi Quick Nav &amp; Pilihan Dusun</h1>
+        </div>
+
+        <!-- 3 OPTIONS SWITCHER -->
+        <div class="options-tabs" role="tablist" aria-label="Pilihan Transisi">
+            <button class="tab-btn active" onclick="switchOption('a')" id="tab-opt-a" role="tab" aria-selected="true">
+                <span>🌟 Opsi A: Grounded Civic Canvas</span>
+            </button>
+            <button class="tab-btn" onclick="switchOption('b')" id="tab-opt-b" role="tab" aria-selected="false">
+                <span>🌿 Opsi B: Curved Forest Embrace</span>
+            </button>
+            <button class="tab-btn" onclick="switchOption('c')" id="tab-opt-c" role="tab" aria-selected="false">
+                <span>🎯 Opsi C: Integrated Console Dock</span>
+            </button>
+        </div>
+
+        <!-- DEVICE VIEWPORT TOGGLES -->
+        <div class="viewport-controls" role="group" aria-label="Simulasi Ukuran Layar">
+            <button class="view-btn active" onclick="setViewport('mobile-sm')" id="btn-view-mob-sm" title="Ukuran HP 375px (iPhone SE/Standar)">
+                📱 Mobile 375px
+            </button>
+            <button class="view-btn" onclick="setViewport('mobile-lg')" id="btn-view-mob-lg" title="Ukuran HP 414px (iPhone Plus/Max)">
+                📱 Mobile 414px
+            </button>
+            <button class="view-btn" onclick="setViewport('desktop')" id="btn-view-desk" title="Tampilan Layar Komputer">
+                💻 Desktop
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CANVAS -->
+    <main class="canvas-container">
+        <div class="viewport-frame mode-mobile-sm" id="viewport-frame">
+            
+            <!-- REALISTIC PHONE STATUS -->
+            <div class="phone-notch-bar" aria-hidden="true">
+                <span>09:41</span>
+                <span>📶 5G  🔋 100%</span>
+            </div>
+
+            <!-- HERO SECTION SIMULATION -->
+            <div class="hero-simulation">
+                <p class="hero-tag">Pemerintah Desa Bendung</p>
+                <h2 class="hero-title">Portal Informasi Publik</h2>
+            </div>
+
+            <!-- QUICK DOCK NAVIGATION -->
+            <div class="dock-container">
+                <div class="quick-dock-card" role="list">
+                    <a href="#dusun" class="dock-item active" role="listitem">
+                        <span class="dock-icon">🏡</span>
+                        <span class="dock-label">Dusun</span>
+                    </a>
+                    <a href="#informasi-desa" class="dock-item" role="listitem">
+                        <span class="dock-icon">📄</span>
+                        <span class="dock-label">Informasi</span>
+                    </a>
+                    <a href="#pengumuman" class="dock-item" role="listitem">
+                        <span class="dock-icon">📢</span>
+                        <span class="dock-badge">1</span>
+                        <span class="dock-label">Pengumuman</span>
+                    </a>
+                    <a href="#agenda" class="dock-item" role="listitem">
+                        <span class="dock-icon">📅</span>
+                        <span class="dock-badge">1</span>
+                        <span class="dock-label">Agenda</span>
+                    </a>
+                    <a href="#peta-desa" class="dock-item" role="listitem">
+                        <span class="dock-icon">🗺️</span>
+                        <span class="dock-label">Peta Desa</span>
+                    </a>
+                    <a href="#kontak-desa" class="dock-item" role="listitem">
+                        <span class="dock-icon">📞</span>
+                        <span class="dock-label">Kontak</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════
+                 OPSI A: GROUNDED CIVIC CANVAS (Penyatuan Halus dengan Header Card)
+                 ══════════════════════════════════════════════════════════════ -->
+            <div class="option-panel active" id="panel-opt-a">
+                <div class="opt-a-wrapper">
+                    
+                    <!-- Soft Bridge Tag -->
+                    <div class="opt-a-dock-bridge">
+                        <div class="opt-a-dock-pill">
+                            <span class="dot"></span>
+                            <span>Eksplorasi 6 Wilayah Padukuhan</span>
+                        </div>
+                    </div>
+
+                    <!-- Clean, Compact Header Card -->
+                    <div class="opt-a-head">
+                        <div class="opt-a-title-group">
+                            <span class="opt-a-eyebrow">Wilayah Administratif</span>
+                            <h3 class="opt-a-title">Pilihan Dusun</h3>
+                            <p class="opt-a-sub">Pilih padukuhan untuk melihat batas wilayah, keasrian alam, dan potensi unggulan.</p>
+                        </div>
+                        <a href="#peta-desa" class="opt-a-action-btn">
+                            <span>Buka Peta Wilayah</span>
+                            <span>🗺️</span>
+                        </a>
+                    </div>
+
+                    <!-- Dusun Cards Grid -->
+                    <div class="shared-dusun-grid">
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">01</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Banyuripan</h4>
+                                    <span class="demo-card-chip">Mata Air</span>
+                                </div>
+                                <p class="demo-card-desc">Sumber mata air desa, keasrian alam dan perikanan air tawar.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">02</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Bendung I</h4>
+                                    <span class="demo-card-chip">Pertanian Padi</span>
+                                </div>
+                                <p class="demo-card-desc">Sentra pertanian padi dan kebun buah bagian barat.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">03</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Bendung II</h4>
+                                    <span class="demo-card-chip">Olahan Pangan</span>
+                                </div>
+                                <p class="demo-card-desc">Pemukiman produktif dengan kelompok tani mandiri.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">04</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Gatak</h4>
+                                    <span class="demo-card-chip">Anyaman Bambu</span>
+                                </div>
+                                <p class="demo-card-desc">Perbukitan asri, peternakan kambing &amp; kerajinan bambu.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">05</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Karangsawo</h4>
+                                    <span class="demo-card-chip">Pusat UMKM</span>
+                                </div>
+                                <p class="demo-card-desc">Pengembangan UMKM makanan tradisional &amp; bibit tanaman.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">06</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Plosorejo</h4>
+                                    <span class="demo-card-chip">Palawija &amp; Kayu</span>
+                                </div>
+                                <p class="demo-card-desc">Wilayah timur dinamis dengan palawija &amp; kerajinan kayu.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+                    </div>
+
+                    <div class="explanation-card">
+                        <div class="exp-title">💡 Karakter Opsi A (Grounded Civic Canvas):</div>
+                        <ul class="exp-points">
+                            <li><strong>Transisi Mulus:</strong> Di bawah Quick Nav ditambahkan pill jembatan <em>"Eksplorasi 6 Wilayah Padukuhan"</em> yang menghubungkan dock langsung ke seksi dusun.</li>
+                            <li><strong>Header Terstruktur (Card Header):</strong> Judul dan tombol aksi <em>"Buka Peta Wilayah"</em> dibingkai dalam kartu putih rapi. Tidak ada lagi teks tautan yang melayang sendirian di sebelah kanan secara canggung.</li>
+                            <li><strong>Ruang Seimbang:</strong> Mengeliminasi kesan ruang kosong krem yang hampa di bawah quick nav.</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════
+                 OPSI B: CURVED FOREST EMBRACE (Lengkungan Hijau Elegan & Kontras)
+                 ══════════════════════════════════════════════════════════════ -->
+            <div class="option-panel" id="panel-opt-b">
+                <div class="opt-b-wrapper">
+                    
+                    <!-- Forest curved banner embracing the section -->
+                    <div class="opt-b-arc-bg">
+                        <div class="opt-b-head-top">
+                            <span class="opt-b-badge">🏛️ Wilayah Administratif</span>
+                            <span class="opt-b-stats">📍 6 Padukuhan</span>
+                        </div>
+                        
+                        <h3 class="opt-b-title">Pilihan Dusun</h3>
+                        <p class="opt-b-desc">Jelajahi keasrian alam, sentra pertanian, dan potensi UMKM di setiap dusun Desa Bendung.</p>
+                        
+                        <div class="opt-b-pills-row">
+                            <span class="opt-b-stats">Pilih salah satu dusun di bawah:</span>
+                            <a href="#peta-desa" class="opt-b-map-link">
+                                <span>Lihat di Peta Sebaran</span>
+                                <span>→</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Dusun Cards Grid -->
+                    <div class="shared-dusun-grid">
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">01</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Banyuripan</h4>
+                                    <span class="demo-card-chip">Mata Air</span>
+                                </div>
+                                <p class="demo-card-desc">Sumber mata air desa, keasrian alam dan perikanan air tawar.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">02</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Bendung I</h4>
+                                    <span class="demo-card-chip">Pertanian Padi</span>
+                                </div>
+                                <p class="demo-card-desc">Sentra pertanian padi dan kebun buah bagian barat.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">03</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Bendung II</h4>
+                                    <span class="demo-card-chip">Olahan Pangan</span>
+                                </div>
+                                <p class="demo-card-desc">Pemukiman produktif dengan kelompok tani mandiri.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">04</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Gatak</h4>
+                                    <span class="demo-card-chip">Anyaman Bambu</span>
+                                </div>
+                                <p class="demo-card-desc">Perbukitan asri, peternakan kambing &amp; kerajinan bambu.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">05</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Karangsawo</h4>
+                                    <span class="demo-card-chip">Pusat UMKM</span>
+                                </div>
+                                <p class="demo-card-desc">Pengembangan UMKM makanan tradisional &amp; bibit tanaman.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">06</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Plosorejo</h4>
+                                    <span class="demo-card-chip">Palawija &amp; Kayu</span>
+                                </div>
+                                <p class="demo-card-desc">Wilayah timur dinamis dengan palawija &amp; kerajinan kayu.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+                    </div>
+
+                    <div class="explanation-card">
+                        <div class="exp-title">💡 Karakter Opsi B (Curved Forest Embrace):</div>
+                        <ul class="exp-points">
+                            <li><strong>Kesan Megah &amp; Berkelas:</strong> Menghubungkan warna hijau hero ke banner hijau botol bergradasi halus di bagian header wilayah administratif.</li>
+                            <li><strong>Transisi Sangat Jelas:</strong> Pengunjung langsung merasakan perpindahan dari menu navigasi cepat ke area eksplorasi wilayah desa.</li>
+                            <li><strong>Tombol Peta Terpadu:</strong> Tombol peta berwarna putih kontras di pojok kanan bawah banner, terlihat jelas dan sangat rapi di HP.</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════
+                 OPSI C: INTEGRATED CONSOLE DOCK (Notch Pointer & Header Minimalis)
+                 ══════════════════════════════════════════════════════════════ -->
+            <div class="option-panel" id="panel-opt-c">
+                <div class="opt-c-wrapper">
+                    
+                    <!-- Caret pointer under the active Dusun icon in the dock -->
+                    <div class="opt-c-pointer-bridge">
+                        <div class="opt-c-caret"></div>
+                    </div>
+
+                    <!-- Ultra compact, modern app-like header strip -->
+                    <div class="opt-c-header-strip">
+                        <div class="opt-c-top-line">
+                            <span class="opt-c-badge-pill">Wilayah Administratif</span>
+                            <a href="#peta-desa" class="opt-c-map-chip">
+                                <span>Lihat Peta</span>
+                                <span>→</span>
+                            </a>
+                        </div>
+                        <h3 class="opt-c-main-title">Pilihan Dusun (6 Padukuhan)</h3>
+                        <p class="opt-c-subtitle">Pilih dusun untuk melihat profil lengkap dan potensi wilayah.</p>
+                    </div>
+
+                    <!-- Dusun Cards Grid -->
+                    <div class="shared-dusun-grid">
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">01</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Banyuripan</h4>
+                                    <span class="demo-card-chip">Mata Air</span>
+                                </div>
+                                <p class="demo-card-desc">Sumber mata air desa, keasrian alam dan perikanan air tawar.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">02</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Bendung I</h4>
+                                    <span class="demo-card-chip">Pertanian Padi</span>
+                                </div>
+                                <p class="demo-card-desc">Sentra pertanian padi dan kebun buah bagian barat.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">03</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Bendung II</h4>
+                                    <span class="demo-card-chip">Olahan Pangan</span>
+                                </div>
+                                <p class="demo-card-desc">Pemukiman produktif dengan kelompok tani mandiri.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">04</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Gatak</h4>
+                                    <span class="demo-card-chip">Anyaman Bambu</span>
+                                </div>
+                                <p class="demo-card-desc">Perbukitan asri, peternakan kambing &amp; kerajinan bambu.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">05</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Karangsawo</h4>
+                                    <span class="demo-card-chip">Pusat UMKM</span>
+                                </div>
+                                <p class="demo-card-desc">Pengembangan UMKM makanan tradisional &amp; bibit tanaman.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+
+                        <a href="#" class="demo-card">
+                            <div class="demo-num-box">06</div>
+                            <div class="demo-card-body">
+                                <div class="demo-card-title-row">
+                                    <h4 class="demo-card-title">Dusun Plosorejo</h4>
+                                    <span class="demo-card-chip">Palawija &amp; Kayu</span>
+                                </div>
+                                <p class="demo-card-desc">Wilayah timur dinamis dengan palawija &amp; kerajinan kayu.</p>
+                            </div>
+                            <div class="demo-arrow">→</div>
+                        </a>
+                    </div>
+
+                    <div class="explanation-card">
+                        <div class="exp-title">💡 Karakter Opsi C (Integrated Console Dock):</div>
+                        <ul class="exp-points">
+                            <li><strong>Notch Pointer Terintegrasi:</strong> Menampilkan segitiga kecil penunjuk tepat di bawah tombol menu "Dusun", sehingga pengunjung langsung mengerti bahwa daftar ini adalah hasil klik/pilihan dari navigasi di atasnya.</li>
+                            <li><strong>Super Rapi &amp; Efisien:</strong> Header berbentuk strip putih kompak yang menghemat ruang vertikal layar HP secara signifikan.</li>
+                            <li><strong>Zero Visual Gap:</strong> Jarak transisi antara navigasi dan daftar kartu menjadi sangat presisi dan proporsional.</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- INTERACTION SCRIPT -->
+    <script>
+        function switchOption(optKey) {
+            // Update tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('tab-opt-' + optKey).classList.add('active');
+
+            // Update panels
+            document.querySelectorAll('.option-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('panel-opt-' + optKey).classList.add('active');
+        }
+
+        function setViewport(mode) {
+            const frame = document.getElementById('viewport-frame');
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+
+            frame.classList.remove('mode-mobile-sm', 'mode-mobile-lg');
+
+            if (mode === 'mobile-sm') {
+                frame.classList.add('mode-mobile-sm');
+                document.getElementById('btn-view-mob-sm').classList.add('active');
+            } else if (mode === 'mobile-lg') {
+                frame.classList.add('mode-mobile-lg');
+                document.getElementById('btn-view-mob-lg').classList.add('active');
+            } else {
+                document.getElementById('btn-view-desk').classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

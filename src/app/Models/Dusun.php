@@ -44,4 +44,14 @@ class Dusun extends Model
     {
         return $this->hasMany(Pengumuman::class, 'dusun_id');
     }
+
+    // ─── Public eligibility scopes ───────────────────────────────────────────
+
+    /**
+     * Only Dusun with status ACTIVE are visible on the public site.
+     */
+    public function scopePublicActive($query)
+    {
+        return $query->where('status_dusun', 'ACTIVE');
+    }
 }

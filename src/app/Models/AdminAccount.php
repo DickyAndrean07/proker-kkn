@@ -17,6 +17,7 @@ class AdminAccount extends Authenticatable
 
     protected $hidden = [
         'password_hash',
+        'remember_token',
     ];
 
     protected function casts(): array
@@ -34,21 +35,6 @@ class AdminAccount extends Authenticatable
     public function getAuthPassword(): string
     {
         return $this->password_hash;
-    }
-
-    public function getRememberToken(): ?string
-    {
-        return null;
-    }
-
-    public function setRememberToken($value): void
-    {
-        // Remember token is not supported in MVP schema
-    }
-
-    public function getRememberTokenName(): string
-    {
-        return '';
     }
 
     public function isAdminDusun(): bool

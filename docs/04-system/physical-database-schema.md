@@ -4,14 +4,14 @@
 | --- | --- |
 | Project | Portal Informasi Desa Bendung |
 | Document | Physical Database Schema / Technical Data Design |
-| Version | 1.1 |
+| Version | 1.2 |
 | Status | FROZEN FOR MVP |
 | Database Engine | MariaDB |
 | Conceptual Source | ERD/Data Model v1.0 — FROZEN FOR MVP |
 | Authorization Source | Roles & Permissions v1.0 — FROZEN FOR MVP |
 | Technical Source | Technical R&D v1.0 — FROZEN FOR MVP |
 
-Physical Database Schema / Technical Data Design v1.1 telah melalui human review, memasukkan klarifikasi teknis `PDS-CR-001`, dan tetap ditetapkan sebagai `FROZEN FOR MVP`.
+Physical Database Schema / Technical Data Design v1.2 telah melalui human review, memasukkan klarifikasi teknis `PDS-CR-001` serta Change Request yang disetujui `PDS-CR-002` (Dukungan Remember Me / `remember_token` pada `admin_accounts`), dan tetap ditetapkan sebagai `FROZEN FOR MVP`.
 
 Tidak ditemukan:
 
@@ -265,6 +265,7 @@ Menyimpan akun autentikasi untuk Admin Dusun dan Super Admin tanpa membuat akun 
 | `username` | `VARCHAR(100)` | No | — | UNIQUE | Username login global. |
 | `password_hash` | `VARCHAR(255)` | No | — | — | Strong hash dari Laravel hashing facility. |
 | `role` | `VARCHAR(24)` | No | — | CHECK | `ADMIN_DUSUN` atau `SUPER_ADMIN`. |
+| `remember_token` | `VARCHAR(100)` | Yes | `NULL` | — | Token autentikasi persisten Remember Me bawaan Laravel (`PDS-CR-002`). |
 | `removed_at` | `DATETIME` | Yes | `NULL` | CHECK | Waktu logical removal akun Admin Dusun dalam UTC. |
 | `created_at` | `DATETIME` | No | Application-managed | — | Waktu pembuatan akun dalam UTC. |
 | `updated_at` | `DATETIME` | No | Application-managed | — | Waktu perubahan credential/assignment dalam UTC. |
@@ -1353,6 +1354,8 @@ Enam Technical R&D open questions tetap tidak diselesaikan di dokumen ini:
 
 `PDS-CR-001 — Laravel Migration Repository Metadata Clarification` berstatus **APPROVED / APPLIED** berdasarkan human decision. Klasifikasinya adalah technical physical-schema clarification dengan affected sources Physical Database Schema, SRS, dan Testing Specification. Product/behavior impact, ERD impact, authorization impact, dan UI/UX impact semuanya `NONE`.
 
+`PDS-CR-002 — Remember Me / remember_token Support` berstatus **APPROVED / APPLIED — HUMAN DECISION**. Shared Admin Login kini secara resmi mendukung opsi persistent authentication ("Ingat Saya") bawaan Laravel. Dampak skema fisik: penambahan atribut framework persistent authentication `remember_token VARCHAR(100) NULL` pada tabel `admin_accounts`. Jumlah domain tables tetap 11, framework metadata tetap `migrations` saja, dan total SQL tables tetap 12. Tidak ada entitas domain baru, tidak ada tabel baru, tidak ada relationship baru, serta tidak ada perubahan pada model role/otorisasi.
+
 | Change Request | Count | Result |
 | --- | ---: | --- |
 | Baseline Change Request | 0 | Tidak diperlukan. |
@@ -1362,7 +1365,7 @@ Enam Technical R&D open questions tetap tidak diselesaikan di dokumen ini:
 | Roles/Permissions Change Request | 0 | Tidak diperlukan. |
 | ERD Change Request | 0 | Tidak diperlukan. |
 | Technical Baseline Change Request | 0 | Tidak diperlukan. |
-| Historical approved/applied Physical Schema CR | 1 | `PDS-CR-001` — APPROVED / APPLIED. |
+| Historical approved/applied Physical Schema CR | 2 | `PDS-CR-001`, `PDS-CR-002` — APPROVED / APPLIED. |
 | Open Physical Schema Change Request | 0 | Tidak ada. |
 
 # 39. Review Checklist
@@ -1406,8 +1409,8 @@ Enam Technical R&D open questions tetap tidak diselesaikan di dokumen ini:
 - [x] Logical removal akun tidak menciptakan restore/reuse permission.
 - [x] `migrations` diklasifikasikan hanya sebagai framework operational metadata di luar domain schema.
 - [x] Expected inventory setelah migration initialization adalah 11 domain + 1 framework metadata = 12 SQL tables.
-- [x] `PDS-CR-001` tercatat APPROVED / APPLIED dan Open Physical Schema Change Request = 0.
-- [x] Physical Database Schema ditetapkan Version 1.1 — FROZEN FOR MVP.
+- [x] `PDS-CR-001` dan `PDS-CR-002` tercatat APPROVED / APPLIED dan Open Physical Schema Change Request = 0.
+- [x] Physical Database Schema ditetapkan Version 1.2 — FROZEN FOR MVP.
 
 **Checklist result:** 41/41 PASS.
 
@@ -1416,7 +1419,7 @@ Enam Technical R&D open questions tetap tidak diselesaikan di dokumen ini:
 | Validation | Result |
 | --- | --- |
 | Output scope | PASS — hanya downstream document yang diotorisasi dinormalisasi; tidak ada source code atau implementation artifact |
-| Version / Status | PASS — `1.1`, `FROZEN FOR MVP` |
+| Version / Status | PASS — `1.2`, `FROZEN FOR MVP` |
 | Database engine | PASS — MariaDB |
 | Application/domain physical tables | PASS — 11 |
 | Framework operational metadata | PASS — 1, hanya `migrations` |
@@ -1451,6 +1454,6 @@ Enam Technical R&D open questions tetap tidak diselesaikan di dokumen ini:
 | SQL DDL / Laravel migration / API / code | PASS — none created |
 | Upstream behavior/source changes | PASS — none required |
 | Unauthorized framework tables | PASS — `users`, password reset, sessions, cache, jobs, dan framework tables lain tetap prohibited |
-| Change Request status | PASS — historical approved/applied Physical Schema CR 1 (`PDS-CR-001`); open Physical Schema CR 0 |
+| Change Request status | PASS — historical approved/applied Physical Schema CR 2 (`PDS-CR-001`, `PDS-CR-002`); open Physical Schema CR 0 |
 
-**Final result:** Physical Database Schema / Technical Data Design v1.1 telah menerapkan human decision `PDS-CR-001`, tetap `FROZEN FOR MVP`, dan siap menjadi source untuk DEV-02. Klarifikasi ini tidak mengubah entity, domain table, relationship, behavior, authorization, UI/UX, atau lifecycle; tidak ada implementation artifact yang dibuat dalam normalisasi ini.
+**Final result:** Physical Database Schema / Technical Data Design v1.2 telah menerapkan human decision `PDS-CR-001` dan `PDS-CR-002`, tetap `FROZEN FOR MVP`, dan siap menjadi source definitif implementasi. Penambahan kolom `remember_token` pada `admin_accounts` tidak mengubah entitas domain, jumlah domain table, relationship, otorisasi, UI/UX, atau lifecycle.

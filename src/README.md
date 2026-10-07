@@ -1,13 +1,23 @@
-# Portal Informasi Desa Bendung
+# Portal Informasi Desa Bendung (Aplikasi Laravel)
 
-Fondasi aplikasi Laravel untuk Portal Informasi Desa Bendung.
+Kode aplikasi untuk Portal Informasi Desa Bendung. Gambaran proyek, tangkapan layar, dan dokumentasi lengkap ada di [README utama](../README.md).
 
-## Ruang lingkup saat ini
+## Kebutuhan
 
-- Laravel 13 dengan PHP 8.3 atau lebih baru.
-- Blade, Vite, CSS mobile-first, dan JavaScript progresif minimal.
-- Konfigurasi MariaDB/MySQL melalui environment variable.
-- Session dan cache berbasis file; queue berjalan sinkron.
-- Persistence timezone UTC dengan business timezone `Asia/Jakarta`.
+- PHP 8.3 atau lebih baru
+- Composer dan Node.js 20+
+- MariaDB atau MySQL
 
-Implementasi fitur domain, autentikasi, otorisasi, migrasi skema fisik, dan layar produk berada di luar DEV-01.
+## Perintah umum
+
+```bash
+composer setup   # install dependensi, salin .env, generate key, build aset
+composer dev     # jalankan server pengembangan
+composer test    # jalankan test suite
+```
+
+## Catatan
+
+- Konfigurasi database dan AI diatur lewat environment variable. Gunakan `.env.example` sebagai acuan dan jangan commit `.env`.
+- Session dan cache berbasis file, queue berjalan sinkron.
+- Data disimpan dalam UTC, tampilan memakai `Asia/Jakarta`.

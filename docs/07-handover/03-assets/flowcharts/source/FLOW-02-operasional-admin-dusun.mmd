@@ -1,0 +1,34 @@
+%% FLOW-02 - Alur Operasional Admin Dusun
+flowchart TD
+    A([Login]) --> B[Dashboard]
+    B --> C[Pilih Modul]
+    C --> D[Tambah / Edit Data]
+    D --> E[Periksa Data]
+    E --> F[Simpan Data]
+    F --> G[Tampil Sesuai Visibilitas]
+
+    G --> H{Data Tidak Berlaku?}
+    H -- Tidak --> I([Selesai])
+    H -- Ya --> J[Nonaktifkan Data]
+    J --> K[Tidak Tampil di Publik]
+
+    K --> L{Salah nonaktifkan?}
+    L -- Tidak --> I
+    L -- Ya --> M[Hubungi Super Admin]
+    M --> I
+
+    class A start
+    class B,C,D,E,F,G process
+    class H,L decision
+    class J,K warning
+    class M superadmin
+    class I finish
+
+    classDef start fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.4px;
+    classDef process fill:#F7FAF8,stroke:#8AA99A,color:#1F332A,stroke-width:1.2px;
+    classDef decision fill:#FFF4D8,stroke:#C48A1B,color:#3B2A04,stroke-width:1.3px;
+    classDef public fill:#E7F0FF,stroke:#4D75B8,color:#17345F,stroke-width:1.2px;
+    classDef admin fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.2px;
+    classDef superadmin fill:#F0EAF8,stroke:#7252A3,color:#2E1E4D,stroke-width:1.2px;
+    classDef warning fill:#FDECEC,stroke:#B95B5B,color:#5A1E1E,stroke-width:1.2px;
+    classDef finish fill:#EDF2EF,stroke:#6E8377,color:#1F332A,stroke-width:1.2px;

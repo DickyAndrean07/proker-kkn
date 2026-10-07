@@ -45,4 +45,53 @@ class Pengumuman extends Model
 
         return $day->isAfter($expiresOn);
     }
+
+    // ─── Public eligibility scopes ───────────────────────────────────────────
+
+    /**
+     * Active announcements: not soft-deleted AND expiry date >= today in Asia/Jakarta.
+     * Expiry date = today counts as ACTIVE (boundary per normalization).
+     */
+    public function scopeActiveAnnouncements($query, ?string $timezone = 'Asia/Jakarta')
+    {
+        $today = now($timezone)->toDateString();
+
+        return $query->whereDate('tanggal_kedaluwarsa', '>=', $today);
+    }
+
+    /**
+     * Archived announcements: not soft-deleted AND expiry date < today in Asia/Jakarta.
+     */
+    public function scopeArchivedAnnouncements($query, ?string $timezone = 'Asia/Jakarta')
+    {
+        $today = now($timezone)->toDateString();
+
+        return $query->whereDate('tanggal_kedaluwarsa', '<', $today);
+    }
+
+    /**
+     * Filter to Pengumuman with scope_level = DESA.
+     * dusun_id = null; does NOT require an active Dusun parent.
+     */
+    public function scopeDesaScope($query)
+    {
+        return $query->where('scope_level', 'DESA');
+    }
+
+    /**
+     * Filter to Pengumuman with scope_level = DUSUN.
+     */
+    public function scopeDusunScope($query)
+    {
+        return $query->where('scope_level', 'DUSUN');
+    }
+
+    /**
+     * Applied only for DUSUN-scoped Pengumuman.
+     * Do NOT call on DESA-scoped queries (dusun_id = null).
+     */
+    public function scopeWithinActiveDusun($query)
+    {
+        return $query->whereHas('dusun', fn ($q) => $q->where('status_dusun', 'ACTIVE'));
+    }
 }

@@ -4,10 +4,10 @@
 | --- | --- |
 | Project | Portal Informasi Desa Bendung |
 | Document | Testing Specification |
-| Version | 1.1 |
+| Version | 1.2 |
 | Status | FROZEN FOR MVP |
 | Execution status | NOT RUN — 108/108 test case belum dieksekusi |
-| Normative software contract | SRS v1.1 — FROZEN FOR MVP |
+| Normative software contract | SRS v1.2 — FROZEN FOR MVP |
 
 ## 1. Tujuan dan Batas Dokumen
 
@@ -33,7 +33,7 @@ Urutan authority yang dipakai:
 12. Visual Design Specification.
 13. High-Fidelity Public Core Reference.
 
-SRS v1.1 menjadi kontrak software normatif. Sumber dengan precedence lebih tinggi menang bila ditemukan konflik. Testing Specification tidak mengubah sumber upstream di luar approved downstream clarification `PDS-CR-001`; kontradiksi lain harus menjadi Change Request, bukan asumsi test.
+SRS v1.2 menjadi kontrak software normatif. Sumber dengan precedence lebih tinggi menang bila ditemukan konflik. Testing Specification tidak mengubah sumber upstream di luar approved downstream clarification `PDS-CR-001` dan `PDS-CR-002`; kontradiksi lain harus menjadi Change Request, bukan asumsi test.
 
 Sumber FROZEN FOR MVP yang dibaca:
 
@@ -151,7 +151,7 @@ Setiap baris katalog adalah satu test case dan memuat: ID, requirement/source, a
 
 | Test Case ID | Requirement/Source | Actor | Preconditions | Test Data | Steps | Expected Result | Priority | Test Level | Automation Candidate | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TC-AD-001 | UF-AD-001; AC-UF-AD-001; SRS-FR-041–044; AUTH-001,006 | ADMIN DUSUN | Login tersedia | Valid, invalid, removed account | Login untuk tiap variasi | Valid diarahkan ke dashboard OWN_DUSUN; invalid/removed ditolak generik | P0 | E2E | AUTOMATE | NOT RUN |
+| TC-AD-001 | UF-AD-001; AC-UF-AD-001; SRS-FR-041–044; AUTH-001,006; PDS-CR-002 | ADMIN DUSUN | Login tersedia | Valid, invalid, removed account; remember me flag | Login untuk tiap variasi | Valid diarahkan ke dashboard OWN_DUSUN; remember me menyimpan token persisten yang valid; invalid/removed ditolak generik | P0 | E2E | AUTOMATE | NOT RUN |
 | TC-AD-002 | UF-AD-002; AC-UF-AD-002; SRS-FR-045–047; AUTH-012; VAL-001–017 | ADMIN DUSUN | Authenticated | Valid synthetic resource tiap modul | Create dan submit | Data tersimpan dalam OWN_DUSUN dan langsung eligible sesuai lifecycle/privacy tanpa approval | P0 | E2E | AUTOMATE | NOT RUN |
 | TC-AD-003 | UF-AD-003; AC-UF-AD-003; SRS-FR-045–047; AUTH-001,012 | ADMIN DUSUN | Own/foreign records ada | Dua Dusun | Update own lalu submit foreign ID/request | Own berubah; foreign read/mutation ditolak server-side tanpa kebocoran | P0 | E2E | AUTOMATE | NOT RUN |
 | TC-AD-004 | UF-AD-004; AC-UF-AD-004; SRS-DATA-001–004; AUTH-003,005,007 | ADMIN DUSUN | Own active operational records | Lima Soft Delete resource | Nonaktifkan; buka normal/public; cari restore/hard delete | `deleted_at` terisi; hilang normal/public; tidak ada restore browser/hard delete | P0 | E2E | AUTOMATE | NOT RUN |
@@ -161,8 +161,8 @@ Setiap baris katalog adalah satu test case dan memuat: ID, requirement/source, a
 ### 9.3 Super Admin — 9/9 User Flow
 
 | Test Case ID | Requirement/Source | Actor | Preconditions | Test Data | Steps | Expected Result | Priority | Test Level | Automation Candidate | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TC-SA-001 | UF-SA-001; AC-UF-SA-001; SRS-FR-041–044,048; SEC-001–006 | SUPER ADMIN | Login tersedia | Valid Super Admin | Login | Dashboard GLOBAL tampil tanpa binding Dusun | P0 | E2E | AUTOMATE | NOT RUN |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TC-SA-001 | UF-SA-001; AC-UF-SA-001; SRS-FR-041–044,048; SEC-001–006; PDS-CR-002 | SUPER ADMIN | Login tersedia | Valid Super Admin; remember me flag | Login | Dashboard GLOBAL tampil tanpa binding Dusun; persistent authentication bekerja bila opsi remember dipilih | P0 | E2E | AUTOMATE | NOT RUN |
 | TC-SA-002 | UF-SA-002; AC-UF-SA-002; SRS-FR-048–050; AUTH-011; SEC-010 | SUPER ADMIN | Authenticated | Desa/multi-Dusun resources | CRUD lintas scope | Perubahan valid diterapkan sesuai GLOBAL dan lifecycle resource | P1 | E2E | AUTOMATE | NOT RUN |
 | TC-SA-003 | UF-SA-003; AC-UF-SA-003; SRS-FR-050; DATA-003; STATE-004 | SUPER ADMIN | Soft Deleted records ada | Lima operational resource | Filter Record Status; restore | `deleted_at` null; eligibility dihitung ulang, bukan dipaksa public | P0 | E2E | AUTOMATE | NOT RUN |
 | TC-SA-004 | UF-SA-004; AC-UF-SA-004; SRS-FR-050; AUTH-004–005; ERR-007–008 | SUPER ADMIN | Target deletable/restricted tersedia | Leaf, parent ber-child, Dusun | Konfirmasi hard delete tiap target | Leaf applicable terhapus; restricted/Dusun ditolak atomik dan jelas | P0 | E2E | AUTOMATE | NOT RUN |
@@ -225,7 +225,7 @@ Validation application-boundary tambahan: username required/global-unique dan no
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | TC-DATA-001 | ERD-DIR-001–003; SRS-DATA-005 | SUPER ADMIN | Seed/migration tersedia | 1 Desa, 6 Dusun | Verifikasi bootstrap dan FK; coba orphan/add-Dusun flow | Satu context Desa; enam awal; tiap Dusun tepat satu Desa; no Add Dusun capability | P1 | INTEGRATION | AUTOMATE | NOT RUN |
 | TC-DATA-002 | ERD-DIR-004–006; STATE-001–002 | SUPER ADMIN | Dusun beserta child ada | ACTIVE/INACTIVE/delete | Transisi status; coba delete | Hanya dua status; child/admin retained; hard delete Dusun ditolak | P0 | INTEGRATION | AUTOMATE | NOT RUN |
-| TC-DATA-003 | ERD-DIR-007–011,035 | SUPER ADMIN | Account fixtures | Public/admin/super/removed; duplicate username | Persist/login/remove/reuse | No public account; role-scope benar; multi-admin allowed; global username reserved; removed retained/tidak login | P0 | INTEGRATION | AUTOMATE | NOT RUN |
+| TC-DATA-003 | ERD-DIR-007–011,035; PDS-CR-002 | SUPER ADMIN | Account fixtures | Public/admin/super/removed; duplicate username; remember token | Persist/login/remove/reuse/remember | No public account; role-scope benar; multi-admin allowed; global username reserved; remember token nullable attribute terisi saat remember me; removed retained/tidak login | P0 | INTEGRATION | AUTOMATE | NOT RUN |
 | TC-DATA-004 | ERD-DIR-012–015 | ADMIN DUSUN | Kontak form/store | Owner, WhatsApp, consent absence, coordinate variants | Create invalid/valid; inspect schema/public projection | Owner/WhatsApp/pair integrity; tidak ada consent field; privacy precondition tidak diinferensikan | P0 | INTEGRATION | AUTOMATE | NOT RUN |
 | TC-DATA-005 | ERD-DIR-016–020 | ADMIN DUSUN | UMKM/product fixtures | Pair/null; multi-product; photo; commerce payload | Persist/query/delete parent | Directory eligibility benar; max one main photo; products inherit; cascade; commerce columns/behavior absent | P1 | INTEGRATION | AUTOMATE | NOT RUN |
 | TC-DATA-006 | ERD-DIR-021–023 | ADMIN DUSUN; SUPER ADMIN | Category/facility fixtures | Used category; pair coordinates; WhatsApp null/value | Persist; delete category; render action | Category required; pair required; used category RESTRICT; WhatsApp conditional | P0 | INTEGRATION | AUTOMATE | NOT RUN |
@@ -589,13 +589,13 @@ Checklist result: **63/63 PASS**.
 
 Final validation result before execution: **34/34 PASS**.
 
-Testing Specification v1.1 telah menerapkan human decision `PDS-CR-001` dan tetap **FROZEN FOR MVP**. Project tetap siap memasuki DEV-02 menggunakan rangkaian specification FROZEN yang lengkap. Testing execution akan dilakukan terhadap implemented builds dan tidak dianggap telah selesai hanya karena test design dibekukan. Normalisasi ini tidak menjalankan test dan tidak memulai DEV-02.
+Testing Specification v1.2 telah menerapkan human decision `PDS-CR-001` dan `PDS-CR-002`, mempertahankan 108 test cases yang terstruktur, dan tetap **FROZEN FOR MVP**. Project tetap siap memasuki tahapan deployment pre-produksi menggunakan rangkaian specification FROZEN yang lengkap.
 
 ## 27. Testing Specification Summary
 
 | Metric | Result |
 | --- | --- |
-| Version / Status | 1.1 / FROZEN FOR MVP |
+| Version / Status | 1.2 / FROZEN FOR MVP |
 | Testing scope | Functional, auth, validation, lifecycle, integrity, UI/responsive/visual, external, environment, regression |
 | Test levels | 7 conceptual levels |
 | Test Case count | 108 |
@@ -615,11 +615,11 @@ Testing Specification v1.1 telah menerapkan human decision `PDS-CR-001` dan teta
 | Regression / Smoke | 7 groups / 14 smoke tests |
 | Testing / Blocking Questions | 0 / 0 |
 | Pre-production dependencies | Documented; no provider/product choice inferred |
-| Change Requests | Historical approved/applied Physical Schema CR 1; all Open Change Requests 0 |
+| Change Requests | Historical approved/applied Physical Schema CR 2 (`PDS-CR-001`, `PDS-CR-002`); all Open Change Requests 0 |
 | Undefined TC references / `TC-SEC-*` | 0 / 0 |
 | Boundary normalization | TC-VAL-002/003 PASS; media wording PASS; TC-DATA-012 framework metadata boundary PASS |
 | Checklist / Final validation | 63/63 PASS / 34/34 PASS |
 | Source integrity | PASS |
-| Human review | COMPLETED — `PDS-CR-001` APPROVED / APPLIED |
+| Human review | COMPLETED — `PDS-CR-001` & `PDS-CR-002` APPROVED / APPLIED |
 | Testing Specification freeze | FROZEN FOR MVP |
-| Development readiness | READY FOR DEV-02 — DEV-02 not started in this task |
+| Development readiness | READY FOR DEPLOYMENT / OPERATIONS |

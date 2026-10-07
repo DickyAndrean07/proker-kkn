@@ -7,6 +7,7 @@ use App\Models\Desa;
 use App\Models\Dusun;
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
@@ -117,8 +118,9 @@ class AuthenticationTest extends TestCase
         $response->assertSee('Login Admin');
         $response->assertSee('name="username"', false);
         $response->assertSee('name="password"', false);
+        $response->assertSee('name="remember" value="1"', false);
+        $response->assertSee('Ingat saya');
         $response->assertDontSee('Remember Me');
-        $response->assertDontSee('Lupa Password');
         $response->assertDontSee('Daftar');
     }
 
@@ -133,6 +135,23 @@ class AuthenticationTest extends TestCase
         $this->assertAuthenticatedAs($this->adminDusun);
     }
 
+    public function test_valid_admin_dusun_login_with_remember_me_stores_token_and_sets_cookie(): void
+    {
+        $response = $this->post(route('admin.login.submit'), [
+            'username' => 'admindusun1',
+            'password' => 'Secret123!',
+            'remember' => '1',
+        ]);
+
+        $response->assertRedirect(route('admin-dusun.dashboard'));
+        $this->assertAuthenticatedAs($this->adminDusun);
+        $response->assertCookie(Auth::guard('web')->getRecallerName());
+
+        $this->adminDusun->refresh();
+        $this->assertNotNull($this->adminDusun->remember_token);
+        $this->assertNotEmpty($this->adminDusun->remember_token);
+    }
+
     public function test_valid_super_admin_login_succeeds_and_redirects_to_super_admin_dashboard(): void
     {
         $response = $this->post(route('admin.login.submit'), [
@@ -142,6 +161,23 @@ class AuthenticationTest extends TestCase
 
         $response->assertRedirect(route('super-admin.dashboard'));
         $this->assertAuthenticatedAs($this->superAdmin);
+    }
+
+    public function test_valid_super_admin_login_with_remember_me_stores_token_and_sets_cookie(): void
+    {
+        $response = $this->post(route('admin.login.submit'), [
+            'username' => 'superadmin',
+            'password' => 'SuperSecret123!',
+            'remember' => '1',
+        ]);
+
+        $response->assertRedirect(route('super-admin.dashboard'));
+        $this->assertAuthenticatedAs($this->superAdmin);
+        $response->assertCookie(Auth::guard('web')->getRecallerName());
+
+        $this->superAdmin->refresh();
+        $this->assertNotNull($this->superAdmin->remember_token);
+        $this->assertNotEmpty($this->superAdmin->remember_token);
     }
 
     public function test_admin_dusun_of_inactive_dusun_can_login_successfully(): void
@@ -262,6 +298,36 @@ class AuthenticationTest extends TestCase
         $response->assertSessionHasErrors('username');
         $error = session('errors')->first('username');
         $this->assertStringContainsString('Terlalu banyak percobaan login', $error);
+    }
+
+    public function test_logout_rotates_remember_token_and_invalidates_session(): void
+    {
+        $this->post(route('admin.login.submit'), [
+            'username' => 'admindusun1',
+            'password' => 'Secret123!',
+            'remember' => '1',
+        ]);
+
+        $this->adminDusun->refresh();
+        $initialToken = $this->adminDusun->remember_token;
+        $this->assertNotNull($initialToken);
+
+        $response = $this->post(route('admin.logout'));
+
+        $response->assertRedirect(route('admin.login'));
+        $this->assertGuest();
+
+        $this->adminDusun->refresh();
+        $this->assertNotEquals($initialToken, $this->adminDusun->remember_token);
+    }
+
+    public function test_remember_token_is_hidden_from_model_serialization(): void
+    {
+        $this->adminDusun->remember_token = 'sample-secret-remember-token';
+        $array = $this->adminDusun->toArray();
+
+        $this->assertArrayNotHasKey('remember_token', $array);
+        $this->assertArrayNotHasKey('password_hash', $array);
     }
 
     public function test_unsupported_auth_routes_do_not_exist(): void

@@ -1,0 +1,42 @@
+%% FLOW-08 - Alur Operasional Super Admin
+flowchart TD
+    A([Login Super Admin]) --> B[Dashboard Tata Kelola]
+    B --> C{Pilih Kebutuhan}
+
+    C --> D[Identitas Desa & Dusun]
+    C --> E[Data Lintas Dusun]
+    C --> F[Agenda & Pengumuman Desa]
+    C --> G[Monitoring Data & Peta]
+    C --> H[Manajemen Admin Dusun]
+
+    D --> I[Kelola / Monitor Data]
+    E --> I
+    F --> I
+    G --> I
+    H --> I
+
+    I --> J[Periksa Perubahan]
+    J --> K[Simpan Perubahan]
+    K --> L([Selesai])
+
+    E --> M{Data Dinonaktifkan?}
+    M -- Pulihkan --> N[Pulihkan Data]
+    N --> O([Data Aktif Kembali])
+    M -- Hapus Mutlak --> P[Hapus Permanen]
+    P --> Q([Tidak Dapat Dipulihkan])
+
+    class A start
+    class B,D,E,F,G,H,I,J,K process
+    class C,M decision
+    class N,O superadmin
+    class P,Q warning
+    class L finish
+
+    classDef start fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.4px;
+    classDef process fill:#F7FAF8,stroke:#8AA99A,color:#1F332A,stroke-width:1.2px;
+    classDef decision fill:#FFF4D8,stroke:#C48A1B,color:#3B2A04,stroke-width:1.3px;
+    classDef public fill:#E7F0FF,stroke:#4D75B8,color:#17345F,stroke-width:1.2px;
+    classDef admin fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.2px;
+    classDef superadmin fill:#F0EAF8,stroke:#7252A3,color:#2E1E4D,stroke-width:1.2px;
+    classDef warning fill:#FDECEC,stroke:#B95B5B,color:#5A1E1E,stroke-width:1.2px;
+    classDef finish fill:#EDF2EF,stroke:#6E8377,color:#1F332A,stroke-width:1.2px;

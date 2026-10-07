@@ -52,7 +52,9 @@ class LoginController extends Controller
             'removed_at' => null,
         ];
 
-        if (Auth::attempt($credentials)) {
+        $remember = $request->boolean('remember');
+
+        if (Auth::attempt($credentials, $remember)) {
             RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
 

@@ -24,4 +24,23 @@ class KontakPelayanan extends Model
     {
         return $this->belongsTo(Dusun::class, 'dusun_id');
     }
+
+    // ─── Public eligibility scopes ───────────────────────────────────────────
+
+    /**
+     * Only records whose parent Dusun is ACTIVE are publicly visible.
+     * Uses whereHas to avoid JOIN collisions.
+     */
+    public function scopeWithinActiveDusun($query)
+    {
+        return $query->whereHas('dusun', fn ($q) => $q->where('status_dusun', 'ACTIVE'));
+    }
+
+    /**
+     * Only records with both latitude and longitude present appear on maps.
+     */
+    public function scopeWithCoordinates($query)
+    {
+        return $query->whereNotNull('latitude')->whereNotNull('longitude');
+    }
 }

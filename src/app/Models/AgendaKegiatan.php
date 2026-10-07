@@ -64,4 +64,32 @@ class AgendaKegiatan extends Model
 
         return 'BERLANGSUNG';
     }
+
+    // ─── Public eligibility scopes ───────────────────────────────────────────
+
+    /**
+     * Filter to Agenda with scope_level = DESA.
+     * These have dusun_id = null and do NOT require an active Dusun parent.
+     */
+    public function scopeDesaScope($query)
+    {
+        return $query->where('scope_level', 'DESA');
+    }
+
+    /**
+     * Filter to Agenda with scope_level = DUSUN.
+     */
+    public function scopeDusunScope($query)
+    {
+        return $query->where('scope_level', 'DUSUN');
+    }
+
+    /**
+     * Applied only for DUSUN-scoped Agenda; verifies parent Dusun is ACTIVE.
+     * Do NOT call this on DESA-scoped queries (dusun_id = null would match nothing).
+     */
+    public function scopeWithinActiveDusun($query)
+    {
+        return $query->whereHas('dusun', fn ($q) => $q->where('status_dusun', 'ACTIVE'));
+    }
 }

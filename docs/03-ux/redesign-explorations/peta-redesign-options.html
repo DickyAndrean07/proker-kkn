@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Katalog Eksplorasi Redesign Peta Dusun & Wilayah Desa Bendung</title>
+
+    <!-- Google Fonts: Fraunces, Plus Jakarta Sans, Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        :root {
+            --forest-900: #0f2619;
+            --forest-800: #163d27;
+            --forest-700: #1e5235;
+            --forest-600: #2a6f49;
+            --forest-500: #3b8e60;
+            --forest-100: #e8f3ec;
+            --forest-50:  #f3f8f5;
+            
+            --sand-50: #fbf9f5;
+            --sand-100: #f4efe4;
+            --sand-200: #e8dfce;
+            --sand-300: #d6c7ae;
+
+            --gold-600: #b58125;
+            --gold-500: #c99333;
+            --gold-400: #dfad4d;
+            --gold-100: #fbf3e2;
+
+            --terracotta-600: #ba4f29;
+            --terracotta-500: #cf5e34;
+            --terracotta-100: #faeee8;
+
+            --text-main: #1d2b22;
+            --text-muted: #5e6f64;
+            --text-light: #89998e;
+
+            --surface: #ffffff;
+            --surface-glass: rgba(255, 255, 255, 0.88);
+            --surface-dark-glass: rgba(15, 38, 25, 0.88);
+
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 26px;
+            --radius-full: 9999px;
+
+            --shadow-sm: 0 2px 8px rgba(15, 38, 25, 0.06);
+            --shadow-md: 0 8px 24px rgba(15, 38, 25, 0.10);
+            --shadow-lg: 0 16px 40px rgba(15, 38, 25, 0.16);
+            --shadow-glass: 0 12px 36px rgba(15, 38, 25, 0.14);
+
+            --font-serif: 'Fraunces', Georgia, serif;
+            --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --font-ui: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: #ede7dc;
+            background-image: 
+                radial-gradient(#dbcbb5 1px, transparent 1px),
+                linear-gradient(to bottom, #f3ece1, #ede7dc);
+            background-size: 24px 24px, 100% 100%;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 60px;
+        }
+
+        /* ─── TOP CONTROL BAR (OPTION & DEVICE SWITCHER) ─── */
+        .top-deck {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            background: rgba(15, 38, 25, 0.95);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(201, 147, 51, 0.35);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            padding: 10px 16px;
+        }
+
+        .top-deck-inner {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, var(--gold-500), var(--gold-600));
+            color: #ffffff;
+            font-size: 0.70rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        .brand-title {
+            color: #ffffff;
+            font-family: var(--font-serif);
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .brand-title span {
+            color: var(--gold-400);
+        }
+
+        /* Nav Options Pills */
+        .option-selector-group {
+            display: flex;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 4px;
+            border-radius: var(--radius-full);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            gap: 4px;
+            overflow-x: auto;
+        }
+
+        .option-tab-btn {
+            background: transparent;
+            border: none;
+            color: #c9d8ce;
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all 0.22s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .option-tab-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .option-tab-btn.active {
+            background: linear-gradient(135deg, var(--forest-600), var(--forest-700));
+            color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(201, 147, 51, 0.4);
+        }
+
+        .option-tab-btn .badge-opt {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 99px;
+            padding: 1px 6px;
+            font-size: 0.68rem;
+            font-weight: 700;
+        }
+
+        /* Controls Cluster (Device Mode & Scope) */
+        .tools-cluster {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-btn {
+            background: rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            border-radius: var(--radius-full);
+            font-size: 0.74rem;
+            font-weight: 600;
+            padding: 5px 11px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .toggle-btn.active {
+            background: var(--gold-500);
+            color: #1a1a1a;
+            border-color: var(--gold-400);
+            font-weight: 700;
+        }
+
+        /* ─── MAIN STAGE / PREVIEW CONTAINER ─── */
+        .stage-container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 24px auto 0;
+            padding: 0 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.35s ease;
+        }
+
+        /* Device Frame wrapper */
+        .device-viewport {
+            width: 100%;
+            transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+        }
+
+        .device-viewport.mobile-mode {
+            max-width: 412px;
+            background: #ffffff;
+            border-radius: 40px;
+            box-shadow: 0 25px 60px -10px rgba(15, 38, 25, 0.35), 0 0 0 10px #1a2c20, 0 0 0 12px #2f4e3b;
+            overflow: hidden;
+            border: 3px solid #000;
+            position: relative;
+        }
+
+        /* Mobile speaker/notch bar */
+        .mobile-notch {
+            display: none;
+            width: 100%;
+            height: 28px;
+            background: #111;
+            position: relative;
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .device-viewport.mobile-mode .mobile-notch {
+            display: flex;
+        }
+
+        .speaker-hole {
+            width: 60px;
+            height: 4.5px;
+            background: #333;
+            border-radius: 4px;
+        }
+
+        /* ─── OPTION HEADER SUMMARY BANNER ─── */
+        .concept-explainer-card {
+            width: 100%;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(42, 111, 73, 0.16);
+            padding: 16px 22px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .concept-meta h1 {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            color: var(--forest-900);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .concept-meta p {
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            line-height: 1.45;
+        }
+
+        .concept-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .concept-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            background: var(--forest-50);
+            color: var(--forest-700);
+            border: 1px solid rgba(42, 111, 73, 0.2);
+        }
+
+        /* ─── DUSUN / DESA PAGE CONTEXT MOCK ─── */
+        .mock-page-shell {
+            background: var(--sand-50);
+            min-height: 720px;
+            padding: 20px 18px 40px;
+            position: relative;
+        }
+
+        .mock-header-row {
+            margin-bottom: 18px;
+        }
+
+        .mock-title-group {
+            position: relative;
+        }
+
+        .mock-title {
+            font-family: var(--font-serif);
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: var(--forest-900);
+            line-height: 1.15;
+        }
+
+        .mock-gold-dash {
+            width: 32px;
+            height: 3.5px;
+            background: var(--gold-500);
+            border-radius: 2px;
+            margin: 6px 0 8px;
+        }
+
+        .mock-subtitle {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* ══════════════════════════════════════════════════════════════
+           OPTION 1: MODERN MOBILE GIS (FLOATING GLASS HUD + BOTTOM SHEET)
+           ══════════════════════════════════════════════════════════════ */
+        .opt1-container {
+            position: relative;
+            width: 100%;
+            height: 580px;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-glass);
+            border: 1.5px solid rgba(42, 111, 73, 0.16);
+            background: #e9ece6;
+        }
+
+        .opt1-map-target {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Floating Pill Filter HUD */
+        .opt1-hud-bar {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            right: 14px;
+            z-index: 100;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            padding: 5px;
+            border-radius: var(--radius-full);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 20px rgba(15, 38, 25, 0.14);
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .opt1-pill {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            font-family: var(--font-sans);
+            font-size: 0.73rem;
+            font-weight: 700;
+            padding: 6px 2px;
+            border-radius: var(--radius-full);
+            white-space: nowrap;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            width: 100%;
+            min-width: 0;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-sizing: border-box;
+        }
+
+        .opt1-pill:hover {
+            background: rgba(30, 82, 53, 0.08);
+            color: var(--forest-800);
+        }
+
+        .opt1-pill.active {
+            background: linear-gradient(135deg, var(--forest-800), var(--forest-700));
+            color: #ffffff;
+            border-color: rgba(201, 147, 51, 0.5);
+            box-shadow: 0 3px 12px rgba(22, 61, 39, 0.25);
+        }
+
+        .opt1-pill .pill-counter {
+            font-size: 0.65rem;
+            padding: 1px 5px;
+            border-radius: var(--radius-full);
+            background: rgba(255, 255, 255, 0.2);
+            color: inherit;
+        }
+
+        .opt1-pill.active .pill-counter {
+            background: var(--gold-500);
+            color: #ffffff;
+        }
+
+        /* Floating Map Control Buttons */
+        .opt1-map-actions {
+            position: absolute;
+            right: 14px;
+            top: 75px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .opt1-action-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            color: var(--forest-800);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .opt1-action-btn:hover {
+            transform: scale(1.08);
+            background: #ffffff;
+            color: var(--gold-600);
+        }
+
+        /* Bottom Floating Legend */
+        .opt1-mini-legend {
+            position: absolute;
+            left: 14px;
+            bottom: 14px;
+            z-index: 90;
+            background: rgba(15, 38, 25, 0.88);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: var(--radius-full);
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+        }
+
+        .opt1-legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+        .dot-umkm { background: #156635; box-shadow: 0 0 6px #28a745; }
+        .dot-pelayanan { background: #c46a3a; box-shadow: 0 0 6px #fd7e14; }
+        .dot-fasilitas { background: #0077b6; box-shadow: 0 0 6px #0096c7; }
+
+        /* Sliding Bottom Sheet */
+        .opt1-bottom-sheet {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 200;
+            background: #ffffff;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            box-shadow: 0 -8px 30px rgba(15, 38, 25, 0.25);
+            padding: 18px 20px 22px;
+            transform: translateY(105%);
+            transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+            border-top: 1.5px solid rgba(42, 111, 73, 0.16);
+        }
+
+        .opt1-bottom-sheet.open {
+            transform: translateY(0);
+        }
+
+        .opt1-sheet-handle {
+            width: 44px;
+            height: 4.5px;
+            background: #d0d7cf;
+            border-radius: 999px;
+            margin: 0 auto 14px;
+            cursor: pointer;
+        }
+
+        .opt1-sheet-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: #f0f4ee;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .opt1-sheet-close:hover {
+            background: var(--sand-200);
+            color: var(--forest-900);
+        }
+
+        .opt1-sheet-layout {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .opt1-sheet-thumb {
+            width: 82px;
+            height: 82px;
+            border-radius: var(--radius-md);
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #e2ede5;
+            border: 1px solid rgba(42, 111, 73, 0.15);
+        }
+
+        .opt1-sheet-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .opt1-sheet-cat {
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 3px 8px;
+            border-radius: var(--radius-full);
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+        .cat-umkm { background: #e6f4ea; color: #137333; }
+        .cat-pelayanan { background: #fce8e6; color: #c5221f; }
+        .cat-fasilitas { background: #e8f0fe; color: #1a73e8; }
+
+        .opt1-sheet-name {
+            font-family: var(--font-serif);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--forest-900);
+            line-height: 1.25;
+            margin-bottom: 4px;
+        }
+
+        .opt1-sheet-addr {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .opt1-sheet-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--forest-700), var(--forest-600));
+            color: #ffffff;
+            text-decoration: none;
+            padding: 7px 14px;
+            border-radius: var(--radius-full);
+            font-size: 0.78rem;
+            font-weight: 700;
+            box-shadow: 0 3px 10px rgba(30, 82, 53, 0.22);
+            transition: all 0.2s ease;
+        }
+
+        .opt1-sheet-action:hover {
+            background: var(--forest-800);
+            transform: translateY(-1px);
+        }
+
+        /* ══════════════════════════════════════════════════════════════
+           OPTION 2: SPLIT EXPLORER & CARD CAROUSEL (AIRBNB VIBE)
+           ══════════════════════════════════════════════════════════════ */
+        .opt2-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .opt2-toolbar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .opt2-search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #ffffff;
+            border: 1.5px solid rgba(42, 111, 73, 0.18);
+            border-radius: var(--radius-full);
+            padding: 8px 16px;
+            width: 100%;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .opt2-search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            color: var(--text-main);
+            width: 100%;
+        }
+
+        /* Floating HUD Pill Bar Inside Map (Non-Truncated & Zero-Scroll) */
+        .opt2-filter-pills {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            z-index: 500;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            padding: 5px;
+            border-radius: var(--radius-full);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            box-shadow: 0 4px 20px rgba(15, 38, 25, 0.18);
+            overflow: hidden;
+            box-sizing: border-box;
+            pointer-events: auto;
+        }
+
+        .opt2-chip {
+            width: 100%;
+            min-width: 0;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            border-radius: var(--radius-full);
+            padding: 6px 2px;
+            font-size: 0.73rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-sizing: border-box;
+        }
+
+        .opt2-chip:hover {
+            border-color: rgba(42, 111, 73, 0.2);
+            color: var(--forest-700);
+            background: rgba(30, 82, 53, 0.08);
+        }
+
+        .opt2-chip.active {
+            background: linear-gradient(135deg, var(--forest-800), var(--forest-700));
+            border-color: rgba(201, 147, 51, 0.45);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(22, 61, 39, 0.25);
+        }
+
+        .opt2-chip .chip-emoji {
+            font-size: 0.8rem;
+            line-height: 1;
+        }
+
+        .opt2-chip .opt2-pill-cnt {
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 1px 5px;
+            border-radius: var(--radius-full);
+            background: rgba(0, 0, 0, 0.08);
+            color: inherit;
+            line-height: 1.2;
+            flex-shrink: 0;
+        }
+
+        .opt2-chip.active .opt2-pill-cnt {
+            background: var(--gold-500);
+            color: #ffffff;
+        }
+
+        .opt2-map-box {
+            height: 500px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1.5px solid rgba(42, 111, 73, 0.16);
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+
+        .opt2-map-actions {
+            position: absolute;
+            right: 14px;
+            top: 66px;
+            z-index: 500;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Carousel Strip Under Map */
+        .opt2-carousel-strip {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(250px, 280px);
+            gap: 12px;
+            overflow-x: auto;
+            padding: 6px 2px 14px;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: thin;
+        }
+
+        .opt2-card {
+            scroll-snap-align: start;
+            background: #ffffff;
+            border: 1.5px solid rgba(42, 111, 73, 0.14);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.2s ease;
+        }
+
+        .opt2-card:hover, .opt2-card.selected {
+            transform: translateY(-5px);
+            border-color: var(--forest-600);
+            box-shadow: var(--shadow-md);
+        }
+
+        .opt2-card.selected {
+            outline: 2px solid var(--forest-500);
+        }
+
+        .opt2-card-img-wrap {
+            height: 110px;
+            position: relative;
+            background: #e6ede4;
+        }
+
+        .opt2-card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .opt2-badge-float {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: var(--radius-full);
+            background: rgba(15, 38, 25, 0.85);
+            color: #ffffff;
+            backdrop-filter: blur(4px);
+        }
+
+        .opt2-card-body {
+            padding: 10px 12px 12px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .opt2-card-title {
+            font-size: 0.92rem;
+            font-weight: 800;
+            color: var(--forest-900);
+            margin-bottom: 4px;
+        }
+
+        .opt2-card-addr {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            line-height: 1.35;
+        }
+
+        .opt2-card-footer {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(42, 111, 73, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--forest-700);
+        }
+
+        /* ══════════════════════════════════════════════════════════════
+           OPTION 3: EDITORIAL SPATIAL CANVAS (CIVIC DASHBOARD & THEMATIC)
+           ══════════════════════════════════════════════════════════════ */
+        .opt3-container {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            border: 1.5px solid rgba(42, 111, 73, 0.16);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .opt3-header-bar {
+            background: linear-gradient(135deg, var(--forest-900), var(--forest-800));
+            color: #ffffff;
+            padding: 16px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .opt3-stats-deck {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .opt3-stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .opt3-stat-num {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gold-400);
+            line-height: 1;
+        }
+
+        .opt3-stat-lbl {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #b7cbbf;
+            margin-top: 3px;
+        }
+
+        .opt3-scope-tab {
+            display: flex;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: var(--radius-full);
+            padding: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .opt3-scope-btn {
+            background: transparent;
+            border: none;
+            color: #cbd8cf;
+            font-size: 0.74rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+        }
+
+        .opt3-scope-btn.active {
+            background: var(--gold-500);
+            color: #112217;
+        }
+
+        .opt3-map-wrap {
+            height: 480px;
+            position: relative;
+            background: #e8ebe5;
+        }
+
+        /* Interactive Legend Filter Bar at bottom */
+        .opt3-interactive-legend {
+            background: var(--sand-50);
+            padding: 12px 20px;
+            border-top: 1px solid var(--sand-200);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .opt3-legend-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .opt3-interactive-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #ffffff;
+            border: 1px solid var(--sand-300);
+            padding: 5px 12px;
+            border-radius: var(--radius-md);
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .opt3-interactive-pill:hover {
+            border-color: var(--forest-600);
+            transform: translateY(-1px);
+        }
+
+        .opt3-interactive-pill.active {
+            background: var(--forest-800);
+            color: #ffffff;
+            border-color: var(--forest-800);
+        }
+
+        .opt3-interactive-pill.active .opt3-legend-dot {
+            box-shadow: 0 0 8px #ffffff;
+        }
+
+        /* ─── CUSTOM POPUP / CARD SKINS ─── */
+        .portal-custom-badge-icon {
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.35));
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .portal-custom-badge-icon:hover {
+            transform: translateY(-4px) scale(1.12);
+        }
+
+        /* Comparison Table Drawer */
+        .compare-section {
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 36px;
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(42, 111, 73, 0.16);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .compare-title {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            color: var(--forest-900);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            margin-top: 14px;
+        }
+
+        .compare-table th, .compare-table td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--sand-200);
+        }
+
+        .compare-table th {
+            background: var(--forest-50);
+            color: var(--forest-900);
+            font-weight: 800;
+        }
+
+        .compare-table tr:hover td {
+            background: rgba(243, 248, 245, 0.5);
+        }
+
+        .tag-recom {
+            background: linear-gradient(135deg, var(--gold-500), var(--gold-600));
+            color: #ffffff;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ─── TOP BAR: SWITCHER ─── -->
+    <header class="top-deck">
+        <div class="top-deck-inner">
+            <div class="brand-cluster">
+                <span class="brand-badge">Eksplorasi UI</span>
+                <span class="brand-title">Redesign Peta <span>Desa Bendung</span></span>
+            </div>
+
+            <!-- 3 Options Tabs -->
+            <div class="option-selector-group" role="tablist">
+                <button class="option-tab-btn active" id="tab-opt1" onclick="switchOption(1)" role="tab" aria-selected="true">
+                    <span class="badge-opt">1</span> Floating HUD & Bottom Sheet
+                </button>
+                <button class="option-tab-btn" id="tab-opt2" onclick="switchOption(2)" role="tab" aria-selected="false">
+                    <span class="badge-opt">2</span> Split Explorer & Carousel
+                </button>
+                <button class="option-tab-btn" id="tab-opt3" onclick="switchOption(3)" role="tab" aria-selected="false">
+                    <span class="badge-opt">3</span> Editorial Spatial Canvas
+                </button>
+            </div>
+
+            <!-- Viewport & Scope Toggles -->
+            <div class="tools-cluster">
+                <button class="toggle-btn" id="btn-device-toggle" onclick="toggleDeviceMode()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+                    <span id="device-label">Mode HP (390px)</span>
+                </button>
+                <button class="toggle-btn" id="btn-scope-toggle" onclick="toggleScope()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m12 8 4 4-4 4M8 12h8"/></svg>
+                    <span id="scope-label">Peta Dusun</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ─── MAIN STAGE ─── -->
+    <main class="stage-container">
+
+        <!-- Banner Info Option -->
+        <div class="concept-explainer-card" id="concept-banner">
+            <div class="concept-meta">
+                <h1 id="banner-title">Opsi 1: Floating Glass HUD & Smart Bottom Sheet <span class="tag-recom">Direkomendasikan untuk HP</span></h1>
+                <p id="banner-desc">Menghilangkan box hijau kaku dan dropdown formulir. Digantikan oleh chip filter mengambang di atas peta dan kartu laci (bottom sheet) yang meluncur mulus saat titik ditekan tanpa menutupi peta.</p>
+            </div>
+            <div class="concept-tags" id="banner-tags">
+                <span class="concept-tag">✨ Full Screen Map</span>
+                <span class="concept-tag">📱 Anti-Popup Berantakan</span>
+                <span class="concept-tag">🍃 Clean Touch Gestures</span>
+            </div>
+        </div>
+
+        <!-- Frame Viewport (Toggle Mobile / Desktop) -->
+        <div class="device-viewport mobile-mode" id="device-frame">
+            <div class="mobile-notch"><div class="speaker-hole"></div></div>
+
+            <div class="mock-page-shell">
+
+                <!-- Header Section -->
+                <div class="mock-header-row">
+                    <div class="mock-title-group">
+                        <h2 class="mock-title" id="mock-section-title">Peta Dusun</h2>
+                        <div class="mock-gold-dash"></div>
+                        <p class="mock-subtitle" id="mock-section-desc">Sebaran lokasi fasilitas, UMKM, dan titik pelayanan di wilayah Dusun Kaliasin.</p>
+                    </div>
+                </div>
+
+                <!-- ════════════════════════════════════════════════
+                     VIEW 1: FLOATING HUD & BOTTOM SHEET
+                     ════════════════════════════════════════════════ -->
+                <div id="view-option-1" class="option-view">
+                    <div class="opt1-container">
+                        <!-- Floating Pills Filter -->
+                        <div class="opt1-hud-bar" role="toolbar" aria-label="Filter kategori">
+                            <button class="opt1-pill active" onclick="filterMarkers('semua', this)">
+                                <span>Semua</span> <span class="pill-counter" id="count-all">8</span>
+                            </button>
+                            <button class="opt1-pill" onclick="filterMarkers('UMKM', this)">
+                                <span>🏪 UMKM</span> <span class="pill-counter" id="count-umkm">3</span>
+                            </button>
+                            <button class="opt1-pill" onclick="filterMarkers('Fasilitas', this)">
+                                <span>🏛️ Fasilitas</span> <span class="pill-counter" id="count-fasilitas">3</span>
+                            </button>
+                            <button class="opt1-pill" onclick="filterMarkers('Pelayanan', this)">
+                                <span>📋 Pelayanan</span> <span class="pill-counter" id="count-pelayanan">2</span>
+                            </button>
+                        </div>
+
+                        <!-- Floating Action Buttons -->
+                        <div class="opt1-map-actions">
+                            <button class="opt1-action-btn" title="Pusatkan Ulang Peta" onclick="resetMapView()">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+                            </button>
+                            <button class="opt1-action-btn" title="Ganti Mode Satelit / Standar" onclick="toggleMapLayer()">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>
+                            </button>
+                        </div>
+
+                        <!-- Real Leaflet Map #1 -->
+                        <div id="map-target-1" class="opt1-map-target"></div>
+
+                        <!-- Mini Legend Tag -->
+                        <div class="opt1-mini-legend">
+                            <span><span class="opt1-legend-dot dot-umkm"></span>UMKM</span>
+                            <span><span class="opt1-legend-dot dot-fasilitas"></span>Fasilitas</span>
+                            <span><span class="opt1-legend-dot dot-pelayanan"></span>Pelayanan</span>
+                        </div>
+
+                        <!-- Sliding Bottom Sheet (Appears when pin clicked) -->
+                        <div class="opt1-bottom-sheet" id="opt1-drawer">
+                            <div class="opt1-sheet-handle" onclick="closeSheet()"></div>
+                            <button class="opt1-sheet-close" onclick="closeSheet()" aria-label="Tutup">✕</button>
+                            <div class="opt1-sheet-layout">
+                                <img src="" alt="" class="opt1-sheet-thumb" id="sheet-thumb">
+                                <div class="opt1-sheet-info">
+                                    <span class="opt1-sheet-cat cat-umkm" id="sheet-cat">UMKM</span>
+                                    <h3 class="opt1-sheet-name" id="sheet-name">Krupuk Kanji</h3>
+                                    <p class="opt1-sheet-addr" id="sheet-addr">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                                        <span id="sheet-addr-text">Dusun Bendung Rt 01 Rw 06</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="opt1-sheet-actions">
+                                <a href="javascript:void(0)" class="btn-sheet-primary" id="sheet-detail-link">
+                                    Lihat Detail
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17 17 7M8 7h9v9"/></svg>
+                                </a>
+                                <a href="javascript:void(0)" target="_blank" class="btn-sheet-route" id="sheet-route-link">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                                    Rute Arah
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ════════════════════════════════════════════════
+                     VIEW 2: SPLIT EXPLORER & CARD CAROUSEL
+                     ════════════════════════════════════════════════ -->
+                <div id="view-option-2" class="option-view" style="display:none;">
+                    <div class="opt2-container">
+                        <!-- Search Bar -->
+                        <div class="opt2-toolbar">
+                            <div class="opt2-search-box">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                <input type="text" id="opt2-search" placeholder="Cari nama tempat atau produk..." oninput="handleSearch(this.value)">
+                            </div>
+                        </div>
+
+                        <!-- Real Leaflet Map #2 with Floating HUD Pill Bar -->
+                        <div class="opt2-map-box">
+                            <!-- Floating Pill Filter HUD (Option 2 Non-Truncated) -->
+                            <div class="opt2-filter-pills" role="toolbar" aria-label="Filter kategori">
+                                <button class="opt2-chip active" onclick="filterMarkers('semua', this)">
+                                    <span>Semua</span> <span class="opt2-pill-cnt" id="opt2-count-all">8</span>
+                                </button>
+                                <button class="opt2-chip" onclick="filterMarkers('UMKM', this)">
+                                    <span><span class="chip-emoji">🏪</span> UMKM</span> <span class="opt2-pill-cnt" id="opt2-count-umkm">3</span>
+                                </button>
+                                <button class="opt2-chip" onclick="filterMarkers('Fasilitas', this)">
+                                    <span><span class="chip-emoji">🏛️</span> Fasilitas</span> <span class="opt2-pill-cnt" id="opt2-count-fasilitas">3</span>
+                                </button>
+                                <button class="opt2-chip" onclick="filterMarkers('Pelayanan', this)">
+                                    <span><span class="chip-emoji">📋</span> Pelayanan</span> <span class="opt2-pill-cnt" id="opt2-count-pelayanan">2</span>
+                                </button>
+                            </div>
+
+                            <!-- Floating Map Controls -->
+                            <div class="opt2-map-actions">
+                                <button class="opt1-action-btn" title="Pusatkan Ulang Peta" onclick="resetMap2View()">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+                                </button>
+                                <button class="opt1-action-btn active" id="btn-layer-opt2" title="Ganti Mode Satelit / Standar" onclick="toggleMap2Layer(this)">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>
+                                </button>
+                            </div>
+                            <div id="map-target-2" style="width:100%;height:100%;"></div>
+                        </div>
+
+                        <!-- Two-way Synced Horizontal Carousel Cards -->
+                        <div class="opt2-carousel-strip" id="opt2-cards-strip">
+                            <!-- Cards dynamically rendered from data -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ════════════════════════════════════════════════
+                     VIEW 3: EDITORIAL SPATIAL CANVAS (CIVIC DASHBOARD)
+                     ════════════════════════════════════════════════ -->
+                <div id="view-option-3" class="option-view" style="display:none;">
+                    <div class="opt3-container">
+                        <!-- Top Civic Stats & Scope Bar -->
+                        <div class="opt3-header-bar">
+                            <div class="opt3-stats-deck">
+                                <div class="opt3-stat-item">
+                                    <span class="opt3-stat-num">4 Titik</span>
+                                    <span class="opt3-stat-lbl">Fasilitas Umum</span>
+                                </div>
+                                <div class="opt3-stat-item">
+                                    <span class="opt3-stat-num">3 Unit</span>
+                                    <span class="opt3-stat-lbl">UMKM Terverifikasi</span>
+                                </div>
+                                <div class="opt3-stat-item">
+                                    <span class="opt3-stat-num">4 RT / 1 RW</span>
+                                    <span class="opt3-stat-lbl">Kewilayahan</span>
+                                </div>
+                            </div>
+                            <div class="opt3-scope-tab">
+                                <button class="opt3-scope-btn active" onclick="switchOpt3Scope('dusun', this)">Dusun Kaliasin</button>
+                                <button class="opt3-scope-btn" onclick="switchOpt3Scope('desa', this)">Semua Dusun</button>
+                            </div>
+                        </div>
+
+                        <!-- Map Frame with custom Thematic Border -->
+                        <div class="opt3-map-wrap">
+                            <div id="map-target-3" style="width:100%;height:100%;"></div>
+                        </div>
+
+                        <!-- Interactive Legend with Direct Toggle Filters -->
+                        <div class="opt3-interactive-legend">
+                            <span style="font-size:0.75rem;font-weight:700;color:var(--text-muted);">Pilih Layer untuk Memfilter Titik:</span>
+                            <div class="opt3-legend-group">
+                                <button class="opt3-interactive-pill active" onclick="toggleOpt3Layer('UMKM', this)">
+                                    <span class="opt1-legend-dot dot-umkm"></span>
+                                    <span>Sentra UMKM (3)</span>
+                                </button>
+                                <button class="opt3-interactive-pill active" onclick="toggleOpt3Layer('Fasilitas', this)">
+                                    <span class="opt1-legend-dot dot-fasilitas"></span>
+                                    <span>Fasilitas Publik (3)</span>
+                                </button>
+                                <button class="opt3-interactive-pill active" onclick="toggleOpt3Layer('Pelayanan', this)">
+                                    <span class="opt1-legend-dot dot-pelayanan"></span>
+                                    <span>Pelayanan & RT/RW (2)</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- end mock-page-shell -->
+        </div> <!-- end device-viewport -->
+
+        <!-- ─── COMPARISON & RECOMMENDATION TABLE ─── -->
+        <section class="compare-section">
+            <h3 class="compare-title">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                Perbandingan 3 Konsep Desain
+            </h3>
+            <p style="font-size:0.84rem;color:var(--text-muted);line-height:1.5;">
+                Berikut analisis perbandingan kelebihan, kekurangan, dan kecocokan setiap opsi terhadap masalah yang terlihat pada screenshot:
+            </p>
+
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th>Fitur / Aspek</th>
+                        <th>Opsi 1: Floating HUD & Bottom Sheet <span class="tag-recom">Rekomendasi</span></th>
+                        <th>Opsi 2: Split Explorer & Carousel</th>
+                        <th>Opsi 3: Editorial Spatial Canvas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Penyelesaian Masalah Popup Tertutup</strong></td>
+                        <td><span style="color:#2a6f49;font-weight:700;">★ Sangat Baik</span> (Laci meluncur dari bawah, peta tetap 100% terlihat bebas tanpa ketutupan bubble putih).</td>
+                        <td><span style="color:#2a6f49;font-weight:700;">★ Sangat Baik</span> (Kartu sinkron di bawah peta, tidak perlu popup sama sekali).</td>
+                        <td><span style="color:#b58125;font-weight:700;">★ Baik</span> (Popup didesain modern compact dengan floating glass card).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Penggantian Dropdown Kategori Kaku</strong></td>
+                        <td>Chip filter horizontal floating di dalam kaca frosted, dapat digeser sekali sentuh tanpa buka menu native OS.</td>
+                        <td>Search bar terintegrasi + chip filter cepat di atas kartu.</td>
+                        <td>Legend bar bawah yang interaktif (klik item legend untuk on/off layer).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kenyamanan Layar HP (Mobile-First)</strong></td>
+                        <td><strong>Terbaik</strong> — Mirip pengalaman Apple Maps / Grab / Gojek yang intuitif untuk warga saat membuka lewat ponsel.</td>
+                        <td>Sangat interaktif untuk eksplorasi wisata/UMKM dengan geser kartu seperti Airbnb.</td>
+                        <td>Formal, informatif, dan sangat representatif untuk profil resmi pemerintahan desa.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kompatibilitas Layar Desktop</strong></td>
+                        <td>Laci otomatis beradaptasi menjadi floating card di samping kanan atas.</td>
+                        <td>Otomatis berubah menjadi split-screen 2 kolom (kiri daftar kartu, kanan peta).</td>
+                        <td>Tampilan dasbor utuh yang elegan dan berwibawa.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // ─── DATA TITIK DUSUN KALIASIN & DESA BENDUNG ───
+        const SAMPLE_LOCATIONS = [
+            {
+                id: 1,
+                name: "Krupuk Kanji Bu Siti",
+                category: "UMKM",
+                type: "UMKM",
+                dusun: "Kaliasin",
+                address: "Dusun Kaliasin Rt 01 Rw 06, Bendung, Jetis",
+                lat: -7.41940,
+                lng: 112.46780,
+                photo: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&auto=format&fit=crop&q=80",
+                routeUrl: "https://maps.google.com/?q=-7.41940,112.46780",
+                detailUrl: "#"
+            },
+            {
+                id: 2,
+                name: "Balai Dusun Kaliasin",
+                category: "Balai Pertemuan",
+                type: "Fasilitas",
+                dusun: "Kaliasin",
+                address: "Dusun Kaliasin Rt 03 Rw 01, Bendung, Jetis",
+                lat: -7.42010,
+                lng: 112.46880,
+                photo: "https://images.unsplash.com/photo-1541888946425-d0fbb186f5f7?w=500&auto=format&fit=crop&q=80",
+                routeUrl: "https://maps.google.com/?q=-7.42010,112.46880",
+                detailUrl: "#"
+            },
+            {
+                id: 3,
+                name: "Masjid Baiturrahman Kaliasin",
+                category: "Sarana Ibadah",
+                type: "Fasilitas",
+                dusun: "Kaliasin",
+                address: "Dusun Kaliasin Rt 02 Rw 01, Bendung, Jetis",
+                lat: -7.41870,
+                lng: 112.46690,
+                photo: "https://images.unsplash.com/photo-1564769625905-50e93615e769?w=500&auto=format&fit=crop&q=80",
+                routeUrl: "https://maps.google.com/?q=-7.41870,112.46690",
+                detailUrl: "#"
+            },
+            {
+                id: 4,
+                name: "Posyandu Melati Kaliasin",
+                category: "Kesehatan & Posyandu",
+                type: "Fasilitas",
+                dusun: "Kaliasin",
+                address: "Dusun Kaliasin Rt 04 Rw 01, Bendung, Jetis",
+                lat: -7.42080,
+                lng: 112.46740,
+                photo: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=500&auto=format&fit=crop&q=80",
+                routeUrl: "https://maps.google.com/?q=-7.42080,112.46740",
+                detailUrl: "#"
+            },
+            {
+                id: 5,
+                name: "Ahmadun (Bapak RW 01)",
+                category: "Pelayanan RW",
+                type: "Pelayanan",
+                dusun: "Kaliasin",
+                address: "Kediaman Bapak RW, Rt 01 Rw 01 Kaliasin",
+                lat: -7.41910,
+                lng: 112.46820,
+                photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=500&auto=format&fit=crop&q=80",
+                routeUrl: "https://maps.google.com/?q=-7.41910,112.46820",
+                detailUrl: "#"
+            },
+            {
+                id: 6,
+                name: "Muhammad Faisol (Kartar)",
+                category: "Pelayanan Pemuda",
+                type: "Pelayanan",
+                dusun: "Kaliasin",
+                address: "Sekretariat Kartar Rt 03 Rw 01 Kaliasin",
+                lat: -7.42040,
+                lng: 112.46630,
+                photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=500&auto=format&fit=crop&q=80",
+                routeUrl: "https://maps.google.com/?q=-7.42040,112.46630",
+                detailUrl: "#"
+            },
+            {
+                id: 7,
+                name: "Keripik Singkong Barokah",
+                category: "UMKM",
+                type: "UMKM",
+                dusun: "Kaliasin",
+                address: "Rt 02 Rw 01, Dusun Kaliasin",
+                lat: -7.41830,
+                lng: 112.46750,
+                photo: "https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=500&auto=format&fit=crop&q=80",
+                routeUrl: "https://maps.google.com/?q=-7.41830,112.46750",
+                detailUrl: "#"
+            },
+            {
+                id: 8,
+                name: "Bengkel Sepeda Motor Pak Dul",
+                category: "UMKM",
+                type: "UMKM",
+                dusun: "Kaliasin",
+                address: "Jl. Poros Dusun Kaliasin Rt 01",
+                lat: -7.42120,
+                lng: 112.46910,
+                photo: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=500&auto=format&fit=crop&q=80",
+                routeUrl: "https://maps.google.com/?q=-7.42120,112.46910",
+                detailUrl: "#"
+            }
+        ];
+
+        // Custom Pin Generator
+        function getPinIcon(type) {
+            let color = '#A16207';
+            let iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`;
+
+            if (type === 'UMKM') {
+                color = '#156635';
+                iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`;
+            } else if (type === 'Pelayanan') {
+                color = '#c46a3a';
+                iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
+            }
+
+            const html = `
+                <div style="position:relative;width:38px;height:48px;display:flex;flex-direction:column;align-items:center;cursor:pointer;">
+                    <div style="width:36px;height:36px;border-radius:50%;background:${color};border:2.5px solid #ffffff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.35);">
+                        ${iconSvg}
+                    </div>
+                    <div style="width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:10px solid ${color};margin-top:-2px;"></div>
+                </div>`;
+
+            return L.divIcon({
+                html: html,
+                className: 'portal-custom-badge-icon',
+                iconSize: [38, 48],
+                iconAnchor: [19, 46],
+                popupAnchor: [0, -46]
+            });
+        }
+
+        // Map Instances
+        let map1, map2, map3;
+        let markersGroup1, markersGroup2, markersGroup3;
+        let currentOption = 1;
+        let isSatellite = true;
+        let isMobileMode = true;
+        let currentScope = 'dusun'; // 'dusun' or 'desa'
+        let currentFilter = 'semua';
+
+        const tileStreets = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+        const tileSatellite = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+
+        // ─── INITIALIZE MAP 1 ───
+        function initMap1() {
+            if (map1) return;
+            map1 = L.map('map-target-1', {
+                zoomControl: false,
+                attributionControl: false
+            }).setView([-7.4196, 112.4677], 16);
+
+            L.tileLayer(tileSatellite, { maxZoom: 19 }).addTo(map1);
+            markersGroup1 = L.featureGroup().addTo(map1);
+            renderMap1Markers();
+        }
+
+        function renderMap1Markers(filter = 'semua') {
+            markersGroup1.clearLayers();
+            const items = filter === 'semua' 
+                ? SAMPLE_LOCATIONS 
+                : SAMPLE_LOCATIONS.filter(l => l.type === filter);
+
+            items.forEach(loc => {
+                const marker = L.marker([loc.lat, loc.lng], { icon: getPinIcon(loc.type) });
+                marker.on('click', () => {
+                    openSheet(loc);
+                    map1.panTo([loc.lat, loc.lng], { animate: true });
+                });
+                markersGroup1.addLayer(marker);
+            });
+        }
+
+        function openSheet(loc) {
+            const sheet = document.getElementById('opt1-drawer');
+            document.getElementById('sheet-thumb').src = loc.photo;
+            document.getElementById('sheet-name').textContent = loc.name;
+            document.getElementById('sheet-addr-text').textContent = loc.address;
+            
+            const catBadge = document.getElementById('sheet-cat');
+            catBadge.textContent = loc.category;
+            catBadge.className = 'opt1-sheet-cat ' + (loc.type === 'UMKM' ? 'cat-umkm' : loc.type === 'Pelayanan' ? 'cat-pelayanan' : 'cat-fasilitas');
+
+            document.getElementById('sheet-route-link').href = loc.routeUrl;
+            sheet.classList.add('open');
+        }
+
+        function closeSheet() {
+            document.getElementById('opt1-drawer').classList.remove('open');
+        }
+
+        function resetMapView() {
+            if (map1) map1.setView([-7.4196, 112.4677], 16, { animate: true });
+        }
+
+        function toggleMapLayer() {
+            isSatellite = !isSatellite;
+            const newLayer = isSatellite ? tileSatellite : tileStreets;
+            map1.eachLayer(layer => {
+                if (layer instanceof L.TileLayer) map1.removeLayer(layer);
+            });
+            L.tileLayer(newLayer, { maxZoom: 19 }).addTo(map1);
+        }
+
+        let isSatellite2 = true;
+        function toggleMap2Layer(btn) {
+            isSatellite2 = !isSatellite2;
+            const newLayer = isSatellite2 ? tileSatellite : tileStreets;
+            map2.eachLayer(layer => {
+                if (layer instanceof L.TileLayer) map2.removeLayer(layer);
+            });
+            L.tileLayer(newLayer, { maxZoom: 19 }).addTo(map2);
+            if (btn) {
+                btn.classList.toggle('active', isSatellite2);
+                btn.title = isSatellite2 ? 'Beralih ke Peta Standar' : 'Ganti Mode Satelit / Standar';
+            }
+        }
+
+        function resetMap2View() {
+            if (map2) map2.setView([-7.4196, 112.4677], 16, { animate: true });
+        }
+
+        // ─── INITIALIZE MAP 2 (SPLIT & CAROUSEL) ───
+        function initMap2() {
+            if (map2) return;
+            map2 = L.map('map-target-2', {
+                zoomControl: true,
+                attributionControl: false
+            }).setView([-7.4196, 112.4677], 16);
+
+            L.tileLayer(tileSatellite, { maxZoom: 19 }).addTo(map2);
+            markersGroup2 = L.featureGroup().addTo(map2);
+            renderMap2AndCarousel();
+        }
+
+        function renderMap2AndCarousel(filter = 'semua', query = '') {
+            markersGroup2.clearLayers();
+            const strip = document.getElementById('opt2-cards-strip');
+            strip.innerHTML = '';
+
+            let items = SAMPLE_LOCATIONS;
+            if (filter !== 'semua') items = items.filter(l => l.type === filter);
+            if (query.trim() !== '') {
+                const q = query.toLowerCase();
+                items = items.filter(l => l.name.toLowerCase().includes(q) || l.category.toLowerCase().includes(q));
+            }
+
+            items.forEach((loc, idx) => {
+                // Marker
+                const marker = L.marker([loc.lat, loc.lng], { icon: getPinIcon(loc.type) });
+                marker.bindPopup(`
+                    <div style="min-width:210px;max-width:260px;font-family:inherit;">
+                        <div style="position:relative;width:100%;height:125px;border-radius:10px;overflow:hidden;margin-bottom:8px;background:#e9f0e8;">
+                            <img src="${loc.photo}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                            <span class="opt2-badge-float" style="position:absolute;top:7px;left:7px;z-index:2;padding:3px 8px;border-radius:6px;font-size:0.68rem;font-weight:800;background:rgba(16,38,24,0.88);color:#ffffff;">${loc.category}</span>
+                        </div>
+                        <strong style="display:block;font-size:0.96rem;font-weight:800;color:#173823;margin-bottom:3px;">${loc.name}</strong>
+                        <p style="font-size:0.76rem;color:#55685c;margin:0 0 8px;">${loc.address}</p>
+                        <a href="${loc.routeUrl}" style="display:inline-block;padding:5px 10px;border-radius:6px;background:#256b4c;color:#fff;font-size:0.75rem;font-weight:700;text-decoration:none;">Buka Petunjuk ↗</a>
+                    </div>
+                `, { maxWidth: 270, autoPanPadding: [15, 15] });
+
+                marker.on('click', () => {
+                    selectCard(loc.id);
+                    const markerLatLng = marker.getLatLng();
+                    const projected = map2.project(markerLatLng, 17);
+                    const offsetPoint = projected.subtract([0, 110]);
+                    const centerLatLng = map2.unproject(offsetPoint, 17);
+                    map2.flyTo(centerLatLng, 17, { animate: true });
+                });
+                markersGroup2.addLayer(marker);
+
+                // Card
+                const card = document.createElement('article');
+                card.className = 'opt2-card';
+                card.id = `opt2-card-${loc.id}`;
+                card.onclick = () => {
+                    selectCard(loc.id);
+                    const mapBox = document.querySelector('.opt2-map-box');
+                    if (mapBox) {
+                        const rect = mapBox.getBoundingClientRect();
+                        if (rect.top < 70 || rect.bottom > window.innerHeight) {
+                            mapBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }
+                    const markerLatLng = marker.getLatLng();
+                    const projected = map2.project(markerLatLng, 17);
+                    const offsetPoint = projected.subtract([0, 110]);
+                    const centerLatLng = map2.unproject(offsetPoint, 17);
+                    map2.flyTo(centerLatLng, 17, { animate: true, duration: 0.6 });
+                    setTimeout(() => {
+                        marker.openPopup();
+                    }, 200);
+                };
+                card.innerHTML = `
+                    <div class="opt2-card-img-wrap">
+                        <img src="${loc.photo}" alt="" class="opt2-card-img">
+                        <span class="opt2-badge-float">${loc.category}</span>
+                    </div>
+                    <div class="opt2-card-body">
+                        <div>
+                            <h4 class="opt2-card-title">${loc.name}</h4>
+                            <p class="opt2-card-addr">${loc.address}</p>
+                        </div>
+                        <div class="opt2-card-footer">
+                            <span>Buka Petunjuk</span>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17 17 7M8 7h9v9"/></svg>
+                        </div>
+                    </div>`;
+                strip.appendChild(card);
+            });
+        }
+
+        function selectCard(id) {
+            document.querySelectorAll('.opt2-card').forEach(c => c.classList.remove('selected'));
+            const target = document.getElementById(`opt2-card-${id}`);
+            if (target) {
+                target.classList.add('selected');
+                target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
+        }
+
+        function handleSearch(val) {
+            renderMap2AndCarousel(currentFilter, val);
+        }
+
+        // ─── INITIALIZE MAP 3 (EDITORIAL DASHBOARD) ───
+        let opt3ActiveLayers = { UMKM: true, Fasilitas: true, Pelayanan: true };
+
+        function initMap3() {
+            if (map3) return;
+            map3 = L.map('map-target-3', {
+                zoomControl: true,
+                attributionControl: false
+            }).setView([-7.4196, 112.4677], 16);
+
+            L.tileLayer(tileStreets, { maxZoom: 19 }).addTo(map3);
+            markersGroup3 = L.featureGroup().addTo(map3);
+
+            // Add subtle perimeter polygon to represent Dusun Kaliasin boundary
+            const polygonCoords = [
+                [-7.4175, 112.4655],
+                [-7.4172, 112.4695],
+                [-7.4220, 112.4705],
+                [-7.4225, 112.4658]
+            ];
+            L.polygon(polygonCoords, {
+                color: '#2a6f49',
+                weight: 2,
+                opacity: 0.8,
+                fillColor: '#3b8e60',
+                fillOpacity: 0.12,
+                dashArray: '6, 6'
+            }).addTo(map3);
+
+            renderMap3Markers();
+        }
+
+        function renderMap3Markers() {
+            markersGroup3.clearLayers();
+            SAMPLE_LOCATIONS.forEach(loc => {
+                if (!opt3ActiveLayers[loc.type]) return;
+                const marker = L.marker([loc.lat, loc.lng], { icon: getPinIcon(loc.type) });
+                marker.bindPopup(`
+                    <div style="font-family:'Plus Jakarta Sans',sans-serif;padding:2px;max-width:210px;">
+                        <img src="${loc.photo}" style="width:100%;height:85px;object-fit:cover;border-radius:8px;margin-bottom:6px;">
+                        <strong style="display:block;font-size:0.92rem;color:#163d27;line-height:1.2;">${loc.name}</strong>
+                        <span style="display:inline-block;font-size:0.7rem;background:#e8f3ec;color:#1e5235;font-weight:700;padding:2px 6px;border-radius:4px;margin:4px 0;">${loc.category}</span>
+                        <p style="font-size:0.75rem;color:#556;margin:0 0 6px;">${loc.address}</p>
+                        <a href="${loc.routeUrl}" target="_blank" style="font-size:0.75rem;font-weight:700;color:#2a6f49;text-decoration:underline;">Rute Google Maps →</a>
+                    </div>
+                `);
+                markersGroup3.addLayer(marker);
+            });
+        }
+
+        function toggleOpt3Layer(type, btn) {
+            opt3ActiveLayers[type] = !opt3ActiveLayers[type];
+            btn.classList.toggle('active', opt3ActiveLayers[type]);
+            renderMap3Markers();
+        }
+
+        function switchOpt3Scope(scope, btn) {
+            document.querySelectorAll('.opt3-scope-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (scope === 'desa') {
+                map3.flyTo([-7.4196, 112.4677], 14.5);
+            } else {
+                map3.flyTo([-7.4196, 112.4677], 16);
+            }
+        }
+
+        // ─── OPTION SWITCHER LOGIC ───
+        const CONCEPTS = {
+            1: {
+                title: "Opsi 1: Floating Glass HUD & Smart Bottom Sheet <span class='tag-recom'>Direkomendasikan untuk HP</span>",
+                desc: "Menghilangkan box hijau kaku dan dropdown formulir. Digantikan oleh chip filter mengambang di atas peta dan kartu laci (bottom sheet) yang meluncur mulus saat titik ditekan tanpa menutupi peta.",
+                tags: ["✨ Full Screen Map", "📱 Anti-Popup Berantakan", "🍃 Clean Touch Gestures"]
+            },
+            2: {
+                title: "Opsi 2: Split Explorer & Card Carousel (Dua Arah)",
+                desc: "Pengalaman gaya Airbnb: Pengguna dapat menelusuri lokasi lewat kartu geser di bawah peta atau menekan pin di peta yang otomatis menggeser kartu terkait.",
+                tags: ["🏷️ Search Bar Cepat", "🔄 Sinkron Pin & Kartu", "🛵 Sangat Ramah Wisatawan"]
+            },
+            3: {
+                title: "Opsi 3: Editorial Spatial Canvas (Civic Dashboard)",
+                desc: "Sentuhan estetika dasbor pemerintahan modern yang berwibawa: Dilengkapi ringkasan statistik kewilayahan, poligon batas wilayah dusun, dan filter layer interaktif.",
+                tags: ["🏛️ Tipografi Elegan", "📊 Statistik Wilayah", "🗺️ Poligon Batas Dusun"]
+            }
+        };
+
+        function switchOption(optNum) {
+            currentOption = optNum;
+            document.querySelectorAll('.option-tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i + 1 === optNum);
+                b.setAttribute('aria-selected', i + 1 === optNum);
+            });
+
+            document.querySelectorAll('.option-view').forEach((v, i) => {
+                v.style.display = (i + 1 === optNum) ? 'block' : 'none';
+            });
+
+            // Update Header Banner
+            const c = CONCEPTS[optNum];
+            document.getElementById('banner-title').innerHTML = c.title;
+            document.getElementById('banner-desc').textContent = c.desc;
+            document.getElementById('banner-tags').innerHTML = c.tags.map(t => `<span class="concept-tag">${t}</span>`).join('');
+
+            // Initialize Map on tab open & invalidateSize
+            setTimeout(() => {
+                if (optNum === 1) {
+                    initMap1();
+                    map1.invalidateSize();
+                } else if (optNum === 2) {
+                    initMap2();
+                    map2.invalidateSize();
+                } else if (optNum === 3) {
+                    initMap3();
+                    map3.invalidateSize();
+                }
+            }, 100);
+        }
+
+        // Filter Function for Options 1 & 2
+        function filterMarkers(cat, btn) {
+            currentFilter = cat;
+            if (btn) {
+                const parent = btn.parentElement;
+                parent.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+
+            if (currentOption === 1) {
+                renderMap1Markers(cat);
+                closeSheet();
+            } else if (currentOption === 2) {
+                renderMap2AndCarousel(cat, document.getElementById('opt2-search')?.value || '');
+            }
+        }
+
+        // Device Mode Switcher (Mobile Mockup vs Full Desktop)
+        function toggleDeviceMode() {
+            isMobileMode = !isMobileMode;
+            const frame = document.getElementById('device-frame');
+            const label = document.getElementById('device-label');
+            const btn = document.getElementById('btn-device-toggle');
+
+            if (isMobileMode) {
+                frame.classList.add('mobile-mode');
+                label.textContent = "Mode HP (390px)";
+                btn.classList.remove('active');
+            } else {
+                frame.classList.remove('mobile-mode');
+                label.textContent = "Mode Desktop Penuh";
+                btn.classList.add('active');
+            }
+
+            setTimeout(() => {
+                if (map1) map1.invalidateSize();
+                if (map2) map2.invalidateSize();
+                if (map3) map3.invalidateSize();
+            }, 360);
+        }
+
+        // Scope Switcher (Dusun vs Desa)
+        function toggleScope() {
+            currentScope = currentScope === 'dusun' ? 'desa' : 'dusun';
+            const label = document.getElementById('scope-label');
+            const title = document.getElementById('mock-section-title');
+            const desc = document.getElementById('mock-section-desc');
+
+            if (currentScope === 'desa') {
+                label.textContent = "Peta Seluruh Desa";
+                title.textContent = "Peta Wilayah Desa Bendung";
+                desc.textContent = "Sebaran menyeluruh fasilitas publik, sentra UMKM, dan kantor pemerintahan di 5 dusun Desa Bendung.";
+                if (map1) map1.flyTo([-7.4196, 112.4677], 14.5);
+                if (map2) map2.flyTo([-7.4196, 112.4677], 14.5);
+                if (map3) map3.flyTo([-7.4196, 112.4677], 14.5);
+            } else {
+                label.textContent = "Peta Dusun";
+                title.textContent = "Peta Dusun";
+                desc.textContent = "Sebaran lokasi fasilitas, UMKM, dan titik pelayanan di wilayah Dusun Kaliasin.";
+                if (map1) map1.flyTo([-7.4196, 112.4677], 16);
+                if (map2) map2.flyTo([-7.4196, 112.4677], 16);
+                if (map3) map3.flyTo([-7.4196, 112.4677], 16);
+            }
+        }
+
+        // Start with Option 1
+        window.addEventListener('DOMContentLoaded', () => {
+            initMap1();
+        });
+    </script>
+</body>
+</html>

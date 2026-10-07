@@ -25,6 +25,7 @@ use App\Policies\PengumumanPolicy;
 use App\Policies\ProdukUmkmPolicy;
 use App\Policies\UmkmPolicy;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -53,5 +54,10 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(AgendaKegiatan::class, AgendaKegiatanPolicy::class);
         Gate::policy(AgendaMedia::class, AgendaMediaPolicy::class);
         Gate::policy(Pengumuman::class, PengumumanPolicy::class);
+
+        // DEV-05: share $desa with the public layout only (single query per render)
+        View::composer('layouts.public', function ($view) {
+            $view->with('desa', Desa::query()->first());
+        });
     }
 }

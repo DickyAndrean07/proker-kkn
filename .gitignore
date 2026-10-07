@@ -3,12 +3,12 @@ opencode.json
 dev-04.md
 
 # Laravel & Node
+/node_modules/
 /src/vendor/
 /src/node_modules/
 /src/.env
 /src/.env.backup
 /src/.env.production
-/src/public/build
 /src/public/hot
 /src/public/storage
 /src/storage/*.key
@@ -32,3 +32,13 @@ Thumbs.db
 .idea/
 .vscode/
 *.log
+
+# Handover Generated Binaries
+/docs/07-handover/04-final-book/docx/*.docx
+
+
+# Secrets & scratch
+/src/template.env
+/confoh_README.md
+/src/public/peta-desa-redesign-options.html
+/opencode.json

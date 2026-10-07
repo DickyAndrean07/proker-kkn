@@ -2,13 +2,13 @@
 
 **Project:** Portal Informasi Desa Bendung  
 **Document:** Software Requirements Specification  
-**Version:** 1.1  
+**Version:** 1.2  
 **Status:** FROZEN FOR MVP  
 **Requirement Source:** Requirements Baseline v1.0 — FROZEN FOR MVP  
 **Product Source:** PRD v1.0 — FROZEN FOR MVP  
 **UX Source:** Sitemap v1.0 + User Flows v1.0 — FROZEN FOR MVP  
 **Authorization Source:** Roles & Permissions v1.0 — FROZEN FOR MVP  
-**Data Source:** ERD/Data Model v1.0 + Physical Database Schema v1.1 — FROZEN FOR MVP  
+**Data Source:** ERD/Data Model v1.0 + Physical Database Schema v1.2 — FROZEN FOR MVP  
 **Technical Source:** Technical R&D v1.0 — FROZEN FOR MVP  
 **Database Engine:** MariaDB  
 **Business Time Zone:** Asia/Jakarta  
@@ -24,23 +24,23 @@
 | 5 | `docs/04-system/roles-permissions.md` | v1.0 — FROZEN FOR MVP |
 | 6 | `docs/04-system/erd-data-model.md` | v1.0 — FROZEN FOR MVP |
 | 7 | `docs/05-rnd/technical-rnd.md` | v1.0 — APPROVED TECHNICAL BASELINE |
-| 8 | `docs/04-system/physical-database-schema.md` | v1.1 — FROZEN FOR MVP |
+| 8 | `docs/04-system/physical-database-schema.md` | v1.2 — FROZEN FOR MVP |
 
 Requirement produk mengalahkan implementation convenience. SRS SHALL NOT mengubah source FROZEN, menyelesaikan OPEN secara diam-diam, menaikkan OPTIONAL menjadi mandatory, memasukkan FUTURE ke MVP, atau mengubah authorization, data semantics, maupun approved technical stack.
 
 ## 2. Output
 
-SRS Version `1.1`, Status **FROZEN FOR MVP**, memasukkan approved technical clarification `PDS-CR-001` tanpa membuka kembali keputusan produk yang telah dibekukan.
+SRS Version `1.2`, Status **FROZEN FOR MVP**, memasukkan approved technical clarification `PDS-CR-001` serta Change Request yang disetujui `PDS-CR-002` (Dukungan Remember Me / `remember_token` pada `admin_accounts`) tanpa membuka kembali keputusan produk yang telah dibekukan.
 
 | Item | Nilai |
 | --- | --- |
 | Pemilik produk | Pemerintah Desa Bendung / pihak yang ditetapkan pada handover |
 | Target pembaca | Product owner, analis, UI/UX, developer, tester, operator desa |
 | Tahap | Software specification sebelum UI/UX dan Testing Specification |
-| Historical approved/applied Physical Schema CR | 1 — `PDS-CR-001` |
+| Historical approved/applied Physical Schema CR | 2 — `PDS-CR-001`, `PDS-CR-002` |
 | Open Change Request setelah aplikasi | 0 |
 
-Tidak terdapat Change Request terbuka. `PDS-CR-001 — Laravel Migration Repository Metadata Clarification` telah diputuskan manusia dan berstatus **APPROVED / APPLIED**; dampak product/behavior, ERD, authorization, dan UI/UX semuanya `NONE`.
+Tidak terdapat Change Request terbuka. `PDS-CR-001 — Laravel Migration Repository Metadata Clarification` dan `PDS-CR-002 — Remember Me / remember_token Support` telah diputuskan manusia dan berstatus **APPROVED / APPLIED**; dampak product/behavior, ERD, authorization, dan UI/UX semuanya `NONE`.
 
 ## 3. SRS Purpose
 
@@ -161,7 +161,7 @@ Konteks eksternal terdiri dari browser/client web responsif, WhatsApp untuk hand
 
 | ID | Requirement normatif | Source |
 | --- | --- | --- |
-| SRS-FR-041 | Sistem SHALL menyediakan satu halaman login bersama untuk Admin Dusun dan Super Admin menggunakan username dan password. | SEC-008; UF-AD-001; UF-SA-001 |
+| SRS-FR-041 | Sistem SHALL menyediakan satu halaman login bersama untuk Admin Dusun dan Super Admin menggunakan username dan password, serta opsi persistent authentication ("Ingat Saya"). | SEC-008; UF-AD-001; UF-SA-001; PDS-CR-002 |
 | SRS-FR-042 | Setelah autentikasi berhasil, sistem SHALL mengarahkan pengguna ke dashboard sesuai role dan scope. | ROLE-002; UF-AD-001; UF-SA-001 |
 | SRS-FR-043 | Sistem SHALL menolak login jika kredensial tidak valid atau `removed_at IS NOT NULL` tanpa mengungkap detail akun sensitif. | ERD-DIR-035; PDS-DEC-004 |
 | SRS-FR-044 | Sistem SHALL NOT menyediakan login/akun warga, email-required login, public registration, Admin self-registration, atau self-service password reset Admin Dusun melalui email/WhatsApp. | FR-001; SEC-008 |
@@ -175,7 +175,7 @@ Konteks eksternal terdiri dari browser/client web responsif, WhatsApp untuk hand
 | SRS-SEC-003 | Username SHALL memiliki global UNIQUE constraint; normalisasi input exact seperti trim/casing validation SHALL dilakukan pada application boundary tanpa menetapkan perilaku casing yang bertentangan dengan collation MariaDB. | PDS-DEC-004; PDS-DEC-013; Physical Schema §23 |
 | SRS-SEC-004 | Login SHALL dilindungi rate limiting terhadap brute force. | SEC-006 |
 | SRS-SEC-005 | Admin Dusun yang lupa password SHALL meminta reset langsung oleh Super Admin; pemulihan Super Admin tetap external OPEN-010. | SEC-008; ROLE-009; OPEN-010 |
-| SRS-SEC-006 | Sistem SHALL meregenerasi session setelah login berhasil; logout SHALL menginvalidasi authenticated session. Nilai durasi baru SHALL NOT diasumsikan sebelum kebijakan ditetapkan. | Technical R&D §15; User Flows logout |
+| SRS-SEC-006 | Sistem SHALL meregenerasi session setelah login berhasil; jika opsi "Ingat Saya" dipilih, sistem SHALL menyimpan persistent remember token menggunakan fasilitas native Laravel `remember_token` pada `admin_accounts` (`PDS-CR-002`); logout SHALL menginvalidasi authenticated session dan merotasi/membersihkan persistent remember token. Nilai durasi baru SHALL NOT diasumsikan sebelum kebijakan ditetapkan. | Technical R&D §15; User Flows logout; PDS-CR-002 |
 
 ## 19. Authorization Requirements
 
@@ -247,14 +247,14 @@ Soft Delete Kontak Pelayanan adalah physical representation tunggal untuk `DATA-
 
 | ID | Requirement normatif | Source |
 | --- | --- | --- |
-| SRS-DATA-005 | Persistence SHALL menggunakan MariaDB dan merepresentasikan tepat 11 application/domain physical tables, 11/11 conceptual entities, serta 13/13 domain relationships dari Physical Database Schema FROZEN. Laravel MAY additionally contain tabel `migrations` semata-mata sebagai framework operational metadata untuk migration bookkeeping; tabel tersebut SHALL NOT dianggap sebagai product/domain entity. | Physical Schema §§3–5, §22; `PDS-CR-001` |
+| SRS-DATA-005 | Persistence SHALL menggunakan MariaDB dan merepresentasikan tepat 11 application/domain physical tables, 11/11 conceptual entities, serta 13/13 domain relationships dari Physical Database Schema FROZEN. Atribut persistent authentication framework `remember_token VARCHAR(100) NULL` ditambahkan pada `admin_accounts` berdasarkan `PDS-CR-002`. Laravel MAY additionally contain tabel `migrations` semata-mata sebagai framework operational metadata untuk migration bookkeeping; tabel tersebut SHALL NOT dianggap sebagai product/domain entity. | Physical Schema §§3–5, §22; `PDS-CR-001`; `PDS-CR-002` |
 | SRS-DATA-006 | Referential action SHALL menggunakan `RESTRICT` secara default; `CASCADE` hanya untuk `umkms → produk_umkms` dan `agenda_kegiatans → agenda_medias`. | PDS-DEC-011; Physical Schema §22 |
 | SRS-DATA-007 | Business uniqueness SHALL terbatas pada `admin_accounts.username` global dan `(kategori_fasilitas.desa_id, nama_kategori)`; requirement ini SHALL NOT menambah uniqueness lain. | PDS-DEC-013; Physical Schema §23 |
 | SRS-DATA-008 | Koordinat SHALL menggunakan `DECIMAL(9,6)` dengan latitude `-90..90` dan longitude `-180..180`; fasilitas wajib pair, UMKM dan Kontak Pelayanan optional pair. | PDS-DEC-007; ERD-DIR-015–016, 022; Physical Schema §18 |
 
 Business date/time SHALL memakai Asia/Jakarta. Audit/lifecycle `DATETIME` SHALL ditulis dalam UTC. Sistem SHALL NOT menyimpan timezone per row. Source: `PDS-DEC-012`.
 
-Expected implementation inventory setelah Laravel migration initialization adalah 11 domain tables + 1 framework metadata table (`migrations`) = 12 SQL tables. Exception ini tidak mengizinkan `users`, `password_reset_tokens`, `sessions`, `cache`, `cache_locks`, `jobs`, `job_batches`, `failed_jobs`, atau framework table lain tanpa approved Change Request terpisah. Authentication persistence tetap `admin_accounts`; session/cache/queue tetap menggunakan foundation non-database yang telah disetujui.
+Expected implementation inventory setelah Laravel migration initialization adalah 11 domain tables + 1 framework metadata table (`migrations`) = 12 SQL tables. Exception ini tidak mengizinkan `users`, `password_reset_tokens`, `sessions`, `cache`, `cache_locks`, `jobs`, `job_batches`, `failed_jobs`, atau framework table lain tanpa approved Change Request terpisah. Authentication persistence tetap `admin_accounts` (dengan kolom framework `remember_token`); session/cache/queue tetap menggunakan foundation non-database yang telah disetujui.
 
 ## 26. Data Validation Requirements
 
@@ -721,7 +721,7 @@ Pada normalisasi v1.1 ini tidak ditemukan contradiction nyata. Historical approv
 - [x] CHK-047 — Peta Desa dan Peta Dusun filter semantics dibedakan secara benar.
 - [x] CHK-048 — `OPEN-002` tidak menciptakan runtime-configurable template requirement.
 - [x] CHK-049 — SRS tidak mewajibkan MariaDB optimizer menggunakan index tertentu.
-- [x] CHK-050 — SRS ditetapkan Version 1.1 — FROZEN FOR MVP.
+- [x] CHK-050 — SRS ditetapkan Version 1.2 — FROZEN FOR MVP.
 
 **Checklist result:** 50/50 PASS.
 
@@ -729,7 +729,7 @@ Pada normalisasi v1.1 ini tidak ditemukan contradiction nyata. Historical approv
 
 | No. | Validation | Result |
 | ---: | --- | --- |
-| 1 | Version | PASS — 1.1 |
+| 1 | Version | PASS — 1.2 |
 | 2 | Status | PASS — FROZEN FOR MVP |
 | 3 | Unique normative SRS IDs | PASS — 161 |
 | 4 | Functional specifications | PASS — 54 |
@@ -762,7 +762,7 @@ Pada normalisasi v1.1 ini tidak ditemukan contradiction nyata. Historical approv
 | 31 | Optional/Future classifications tidak berubah | PASS — 13 OPTIONAL / 6 FUTURE |
 | 32 | Technical baseline tidak berubah | PASS |
 | 33 | Physical Schema clarification | PASS — 11 domain tables + only `migrations` metadata; total expected SQL tables 12 |
-| 34 | Change Request status | PASS — historical approved/applied PDS CR 1; seluruh Open Change Request 0 |
+| 34 | Change Request status | PASS — historical approved/applied PDS CR 2 (`PDS-CR-001`, `PDS-CR-002`); seluruh Open Change Request 0 |
 | 35 | No API contract | PASS |
 | 36 | No SQL/migration | PASS |
 | 37 | No implementation code | PASS |
@@ -770,4 +770,4 @@ Pada normalisasi v1.1 ini tidak ditemukan contradiction nyata. Historical approv
 
 Mechanically verified document metrics: 161 unique normative IDs (54 Functional, 12 Authorization, 12 Data, 17 Validation, 10 State, 6 External Integration, 8 Error Handling, 19 Security/Authentication/Privacy, 17 Non-Functional, 6 Operational), 25 Acceptance Criteria, 51 required sections, and 50/50 checklist items.
 
-**Conclusion:** SRS v1.1 telah menerapkan human decision `PDS-CR-001`, seluruh traceability dan final validation tetap lulus, dan dokumen tetap **FROZEN FOR MVP**. Tidak ada product behavior, ERD, authorization, UI/UX, atau frozen metric yang berubah; SRS siap menjadi source authority untuk DEV-02.
+**Conclusion:** SRS v1.2 telah menerapkan human decision `PDS-CR-001` dan `PDS-CR-002`, seluruh traceability dan final validation tetap lulus, dan dokumen tetap **FROZEN FOR MVP**. Tidak ada product behavior, ERD, authorization, UI/UX, atau frozen metric yang berubah; SRS siap menjadi source authority definitif implementasi.

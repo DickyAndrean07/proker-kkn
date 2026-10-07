@@ -29,4 +29,23 @@ class Fasilitas extends Model
     {
         return $this->belongsTo(KategoriFasilitas::class, 'kategori_fasilitas_id');
     }
+
+    // ─── Public eligibility scopes ───────────────────────────────────────────
+
+    /**
+     * Only Fasilitas whose parent Dusun is ACTIVE are publicly visible.
+     */
+    public function scopeWithinActiveDusun($query)
+    {
+        return $query->whereHas('dusun', fn ($q) => $q->where('status_dusun', 'ACTIVE'));
+    }
+
+    /**
+     * Only Fasilitas with both coordinates appear on the map as markers.
+     * (Fasilitas requires coordinates per spec, but this scope is explicit for queries.)
+     */
+    public function scopeWithCoordinates($query)
+    {
+        return $query->whereNotNull('latitude')->whereNotNull('longitude');
+    }
 }

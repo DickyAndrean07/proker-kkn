@@ -30,4 +30,22 @@ class Umkm extends Model
     {
         return $this->hasMany(ProdukUmkm::class, 'umkm_id');
     }
+
+    // ─── Public eligibility scopes ───────────────────────────────────────────
+
+    /**
+     * Only UMKM whose parent Dusun is ACTIVE are publicly visible.
+     */
+    public function scopeWithinActiveDusun($query)
+    {
+        return $query->whereHas('dusun', fn ($q) => $q->where('status_dusun', 'ACTIVE'));
+    }
+
+    /**
+     * Only UMKM with both coordinates appear on the map as markers.
+     */
+    public function scopeWithCoordinates($query)
+    {
+        return $query->whereNotNull('latitude')->whereNotNull('longitude');
+    }
 }

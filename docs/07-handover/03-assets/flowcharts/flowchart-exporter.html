@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exporter Flowchart — Buku Panduan Portal Informasi Desa Bendung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --bg-page: #f0f3f6;
+      --bg-card: #ffffff;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --primary: #1e7e4e;
+      --primary-hover: #16653f;
+      --border-color: #e5e7eb;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 960px;
+      width: 100%;
+      background: var(--bg-card);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+    }
+
+    .app-header {
+      padding: 1.5rem 2rem;
+      background: #1e7e4e;
+      color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .app-header h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .app-header p {
+      font-size: 0.8125rem;
+      color: #d1fae5;
+      margin-top: 0.2rem;
+    }
+
+    .tab-bar {
+      display: flex;
+      background: #fafbfc;
+      border-bottom: 1px solid var(--border-color);
+      overflow-x: auto;
+      padding: 0.5rem 1rem 0;
+      gap: 0.25rem;
+    }
+
+    .tab-btn {
+      padding: 0.625rem 1rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: #f3f4f6;
+    }
+
+    .tab-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      border-color: var(--border-color);
+      border-bottom-color: #ffffff;
+      margin-bottom: -1px;
+      box-shadow: 0 -2px 4px rgba(0,0,0,0.02);
+    }
+
+    .control-panel {
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--border-color);
+      background: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .diagram-meta {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .diagram-meta .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      background: #eaf7ea;
+      color: #16653f;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 4px;
+      border: 1px solid #c7ebc7;
+      margin-bottom: 0.35rem;
+    }
+
+    .diagram-meta h2 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .diagram-meta p {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.875rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      color: #374151;
+      font-family: inherit;
+    }
+
+    .btn:hover {
+      background: #f3f4f6;
+      border-color: #d1d5db;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
+    }
+
+    .diagram-viewport {
+      padding: 2.5rem 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #ffffff;
+      min-height: 440px;
+      overflow-x: auto;
+    }
+
+    .mermaid {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .notice-bar {
+      padding: 0.75rem 2rem;
+      background: #fffbeb;
+      border-top: 1px solid #fef3c7;
+      font-size: 0.75rem;
+      color: #92400e;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .footer {
+      padding: 1rem 2rem;
+      background: #fafbfc;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    @media print {
+      @page {
+        size: A5 portrait;
+        margin: 12mm;
+      }
+      body {
+        background: #ffffff;
+        padding: 0;
+      }
+      .container {
+        box-shadow: none;
+        border: none;
+        max-width: 100%;
+      }
+      .app-header, .tab-bar, .toolbar, .notice-bar, .footer {
+        display: none !important;
+      }
+      .control-panel {
+        border: none;
+        padding: 0 0 1rem 0;
+      }
+      .diagram-viewport {
+        padding: 0;
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="app-header">
+      <div>
+        <h1>Flowchart Buku Panduan Portal Informasi Desa Bendung</h1>
+        <p>Alat Visualisasi &amp; Ekspor Diagram Alur Murni (Format A5 Portrait)</p>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchFlow('FLOW-01')">FLOW-01: Akses Warga</button>
+      <button class="tab-btn" onclick="switchFlow('FLOW-02')">FLOW-02: Admin Dusun</button>
+      <button class="tab-btn" onclick="switchFlow('FLOW-03')">FLOW-03: Pembagian Otoritas</button>
+      <button class="tab-btn" onclick="switchFlow('FLOW-04')">FLOW-04: Siklus Data</button>
+      <button class="tab-btn" onclick="switchFlow('FLOW-05')">FLOW-05: Status Agenda</button>
+      <button class="tab-btn" onclick="switchFlow('FLOW-06')">FLOW-06: Siklus Pengumuman</button>
+      <button class="tab-btn" onclick="switchFlow('FLOW-07')">FLOW-07: Penentuan Koordinat</button>
+      <button class="tab-btn" onclick="switchFlow('FLOW-08')">FLOW-08: Super Admin</button>
+    </div>
+
+    <div class="control-panel">
+      <div class="diagram-meta">
+        <span class="badge" id="meta-badge">FLOW-01</span>
+        <h2 id="meta-title">Alur Akses Warga</h2>
+        <p id="meta-subbab">Buku Panduan Subbab 2.1 — Mengakses Portal Informasi Desa</p>
+      </div>
+      <div class="toolbar">
+        <button class="btn btn-primary" onclick="downloadSVG()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Unduh SVG
+        </button>
+        <button class="btn" onclick="downloadPNG()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Unduh PNG (3x)
+        </button>
+        <button class="btn" onclick="window.print()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Cetak A5
+        </button>
+      </div>
+    </div>
+
+    <div class="diagram-viewport">
+      <div class="mermaid" id="diagram-container"></div>
+    </div>
+
+    <div class="notice-bar">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Catatan: Pustaka Mermaid dimuat melalui CDN (membutuhkan koneksi internet untuk perenderan antarmuka). Berkas SVG dan PNG hasil ekspor dapat dibuka dan digunakan secara offline.</span>
+    </div>
+
+    <div class="footer">
+      <span>Portal Informasi Desa Bendung &copy; 2026</span>
+      <span>Otoritas: as-built-user-manual-baseline.md (Frozen)</span>
+    </div>
+  </div>
+
+  <script>
+    const FLOW_DATA = {
+      'FLOW-01': {
+        id: 'FLOW-01',
+        filename: 'FLOW-01-alur-akses-warga',
+        title: 'Alur Akses Warga',
+        subbab: 'Buku Panduan Subbab 2.1 — Mengakses Portal Informasi Desa',
+        source: `%% FLOW-01 - Alur Akses Warga
+flowchart TD
+    A([Mulai]) --> B[Scan QR / Buka Tautan]
+    B --> C[Beranda Desa]
+    C --> D[Pilih Dusun]
+    D --> E{Pilih Informasi}
+
+    E --> F[Kontak / UMKM]
+    E --> G[Fasilitas / Peta]
+    E --> H[Agenda / Pengumuman]
+
+    F --> I[Hubungi via WhatsApp]
+    G --> J[Petunjuk Arah]
+    H --> K[Baca Informasi]
+
+    I --> L([Selesai])
+    J --> L
+    K --> L
+
+    class A start
+    class B,C,D,F,G,H process
+    class E decision
+    class I,J,K public
+    class L finish
+
+    classDef start fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.4px;
+    classDef process fill:#F7FAF8,stroke:#8AA99A,color:#1F332A,stroke-width:1.2px;
+    classDef decision fill:#FFF4D8,stroke:#C48A1B,color:#3B2A04,stroke-width:1.3px;
+    classDef public fill:#E7F0FF,stroke:#4D75B8,color:#17345F,stroke-width:1.2px;
+    classDef admin fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.2px;
+    classDef superadmin fill:#F0EAF8,stroke:#7252A3,color:#2E1E4D,stroke-width:1.2px;
+    classDef warning fill:#FDECEC,stroke:#B95B5B,color:#5A1E1E,stroke-width:1.2px;
+    classDef finish fill:#EDF2EF,stroke:#6E8377,color:#1F332A,stroke-width:1.2px;`
+      },
+      'FLOW-02': {
+        id: 'FLOW-02',
+        filename: 'FLOW-02-operasional-admin-dusun',
+        title: 'Alur Operasional Admin Dusun',
+        subbab: 'Buku Panduan Subbab 3.1 — Prosedur Masuk Sistem & Dashboard Dusun',
+        source: `%% FLOW-02 - Alur Operasional Admin Dusun
+flowchart TD
+    A([Login]) --> B[Dashboard]
+    B --> C[Pilih Modul]
+    C --> D[Tambah / Edit Data]
+    D --> E[Periksa Data]
+    E --> F[Simpan Data]
+    F --> G[Tampil Sesuai Visibilitas]
+
+    G --> H{Data Tidak Berlaku?}
+    H -- Tidak --> I([Selesai])
+    H -- Ya --> J[Nonaktifkan Data]
+    J --> K[Tidak Tampil di Publik]
+
+    K --> L{Salah nonaktifkan?}
+    L -- Tidak --> I
+    L -- Ya --> M[Hubungi Super Admin]
+    M --> I
+
+    class A start
+    class B,C,D,E,F,G process
+    class H,L decision
+    class J,K warning
+    class M superadmin
+    class I finish
+
+    classDef start fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.4px;
+    classDef process fill:#F7FAF8,stroke:#8AA99A,color:#1F332A,stroke-width:1.2px;
+    classDef decision fill:#FFF4D8,stroke:#C48A1B,color:#3B2A04,stroke-width:1.3px;
+    classDef public fill:#E7F0FF,stroke:#4D75B8,color:#17345F,stroke-width:1.2px;
+    classDef admin fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.2px;
+    classDef superadmin fill:#F0EAF8,stroke:#7252A3,color:#2E1E4D,stroke-width:1.2px;
+    classDef warning fill:#FDECEC,stroke:#B95B5B,color:#5A1E1E,stroke-width:1.2px;
+    classDef finish fill:#EDF2EF,stroke:#6E8377,color:#1F332A,stroke-width:1.2px;`
+      },
+      'FLOW-03': {
+        id: 'FLOW-03',
+        filename: 'FLOW-03-pembagian-otoritas',
+        title: 'Pembagian Otoritas Pengguna',
+        subbab: 'Buku Panduan Subbab 1.4 & Subbab 4.1 — Hak Akses & Tata Kelola',
+        source: `%% FLOW-03 - Pembagian Otoritas Pengguna
+flowchart TD
+    A([Portal Informasi Desa Bendung]) --> B[PUBLIK]
+    A --> C[ADMIN DUSUN]
+    A --> D[SUPER ADMIN]
+
+    B --> B1[• Melihat Informasi<br>• Menggunakan Peta & Kontak<br>• Tidak Mengubah Data]
+    C --> C1[• Kelola Dusun Sendiri<br>• Nonaktifkan Data<br>• Tanpa Restore / Hapus Permanen]
+    D --> D1[• Kelola Seluruh Desa<br>• Restore & Hapus Permanen<br>• Kelola Akun & Status Dusun]
+
+    class A start
+    class B,B1 public
+    class C,C1 admin
+    class D,D1 superadmin
+
+    classDef start fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.4px;
+    classDef process fill:#F7FAF8,stroke:#8AA99A,color:#1F332A,stroke-width:1.2px;
+    classDef decision fill:#FFF4D8,stroke:#C48A1B,color:#3B2A04,stroke-width:1.3px;
+    classDef public fill:#E7F0FF,stroke:#4D75B8,color:#17345F,stroke-width:1.2px;
+    classDef admin fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.2px;
+    classDef superadmin fill:#F0EAF8,stroke:#7252A3,color:#2E1E4D,stroke-width:1.2px;
+    classDef warning fill:#FDECEC,stroke:#B95B5B,color:#5A1E1E,stroke-width:1.2px;
+    classDef finish fill:#EDF2EF,stroke:#6E8377,color:#1F332A,stroke-width:1.2px;`
+      },
+      'FLOW-04': {
+        id: 'FLOW-04',
+        filename: 'FLOW-04-lifecycle-data',
+        title: 'Siklus Hidup Data Operasional',
+        subbab: 'Buku Panduan Subbab 3.8 & Subbab 4.10 — Soft Delete & Pemulihan Data',
+        source: `%% FLOW-04 - Siklus Hidup Data Operasional
+flowchart TD
+    A([Data Aktif]) --> B[Tampil di Publik]
+    B --> C{Perlu dinonaktifkan?}
+    C -- Tidak --> D([Tetap Aktif])
+    C -- Ya --> E[Data Dinonaktifkan]
+
+    E --> F[Tidak Tampil di Publik]
+    F --> G{Tindakan Super Admin}
+
+    G -- Pulihkan --> H[Pulihkan Data]
+    H --> I([Data Aktif Kembali])
+
+    G -- Hapus Mutlak --> J[Hapus Permanen]
+    J --> K([Tidak Dapat Dipulihkan])
+
+    class A,I start
+    class B,F process
+    class C,G decision
+    class E,J,K warning
+    class H superadmin
+    class D finish
+
+    classDef start fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.4px;
+    classDef process fill:#F7FAF8,stroke:#8AA99A,color:#1F332A,stroke-width:1.2px;
+    classDef decision fill:#FFF4D8,stroke:#C48A1B,color:#3B2A04,stroke-width:1.3px;
+    classDef public fill:#E7F0FF,stroke:#4D75B8,color:#17345F,stroke-width:1.2px;
+    classDef admin fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.2px;
+    classDef superadmin fill:#F0EAF8,stroke:#7252A3,color:#2E1E4D,stroke-width:1.2px;
+    classDef warning fill:#FDECEC,stroke:#B95B5B,color:#5A1E1E,stroke-width:1.2px;
+    classDef finish fill:#EDF2EF,stroke:#6E8377,color:#1F332A,stroke-width:1.2px;`
+      },
+      'FLOW-05': {
+        id: 'FLOW-05',
+        filename: 'FLOW-05-lifecycle-agenda',
+        title: 'Siklus Status Agenda Kegiatan',
+        subbab: 'Buku Panduan Subbab 2.8 & Subbab 3.6 — Mempublikasikan Agenda Dusun',
+        source: `%% FLOW-05 - Siklus Status Agenda
+flowchart TD
+    A([Agenda Dibuat]) --> B[Akan Datang]
+    B --> C[Berlangsung]
+    C --> D[Selesai]
+    D --> E([Arsip Agenda])
+
+    class A start
+    class B,C,D process
+    class E finish
+
+    classDef start fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.4px;
+    classDef process fill:#F7FAF8,stroke:#8AA99A,color:#1F332A,stroke-width:1.2px;
+    classDef decision fill:#FFF4D8,stroke:#C48A1B,color:#3B2A04,stroke-width:1.3px;
+    classDef public fill:#E7F0FF,stroke:#4D75B8,color:#17345F,stroke-width:1.2px;
+    classDef admin fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.2px;
+    classDef superadmin fill:#F0EAF8,stroke:#7252A3,color:#2E1E4D,stroke-width:1.2px;
+    classDef warning fill:#FDECEC,stroke:#B95B5B,color:#5A1E1E,stroke-width:1.2px;
+    classDef finish fill:#EDF2EF,stroke:#6E8377,color:#1F332A,stroke-width:1.2px;`
+      },
+      'FLOW-06': {
+        id: 'FLOW-06',
+        filename: 'FLOW-06-lifecycle-pengumuman',
+        title: 'Siklus Pengumuman & Warta',
+        subbab: 'Buku Panduan Subbab 2.9 & Subbab 3.7 — Menerbitkan Pengumuman Resmi',
+        source: `%% FLOW-06 - Siklus Pengumuman
+flowchart TD
+    A([Pengumuman Dibuat]) --> B[Pengumuman Aktif]
+
+    B --> C{Kedaluwarsa?}
+    C -- Belum --> B
+    C -- Ya --> D[Masuk Arsip]
+    D --> E[Tetap Dapat Dibaca Publik]
+    E --> F([Tersimpan di Arsip])
+
+    B --> G{Dinonaktifkan?}
+    G -- Tidak --> C
+    G -- Ya --> H[Data Dinonaktifkan]
+    H --> I[Tidak Tampil di Publik]
+    I --> J([Selesai])
+
+    class A start
+    class B,D,E process
+    class C,G decision
+    class H,I warning
+    class F,J finish
+
+    classDef start fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.4px;
+    classDef process fill:#F7FAF8,stroke:#8AA99A,color:#1F332A,stroke-width:1.2px;
+    classDef decision fill:#FFF4D8,stroke:#C48A1B,color:#3B2A04,stroke-width:1.3px;
+    classDef public fill:#E7F0FF,stroke:#4D75B8,color:#17345F,stroke-width:1.2px;
+    classDef admin fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.2px;
+    classDef superadmin fill:#F0EAF8,stroke:#7252A3,color:#2E1E4D,stroke-width:1.2px;
+    classDef warning fill:#FDECEC,stroke:#B95B5B,color:#5A1E1E,stroke-width:1.2px;
+    classDef finish fill:#EDF2EF,stroke:#6E8377,color:#1F332A,stroke-width:1.2px;`
+      },
+      'FLOW-07': {
+        id: 'FLOW-07',
+        filename: 'FLOW-07-penentuan-koordinat',
+        title: 'Alur Penentuan Titik Koordinat Peta',
+        subbab: 'Buku Panduan Subbab 3.5 & Subbab 5.2 — Panduan Koordinat Peta',
+        source: `%% FLOW-07 - Alur Penentuan Titik Koordinat
+flowchart TD
+    A([Mulai]) --> B{Pilih Metode}
+
+    B --> C[Klik Peta]
+    B --> D[Smart Input]
+    B --> E[GPS]
+
+    C --> F[Pin Ditentukan]
+    D --> F
+    E --> F
+
+    F --> G[Periksa Posisi]
+    G --> H{Sudah Sesuai?}
+
+    H -- Tidak --> I[Sesuaikan Titik]
+    I --> F
+
+    H -- Ya --> J[Simpan Data]
+    J --> K([Selesai])
+
+    class A start
+    class C,D,E,F,G,I,J process
+    class B,H decision
+    class K finish
+
+    classDef start fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.4px;
+    classDef process fill:#F7FAF8,stroke:#8AA99A,color:#1F332A,stroke-width:1.2px;
+    classDef decision fill:#FFF4D8,stroke:#C48A1B,color:#3B2A04,stroke-width:1.3px;
+    classDef public fill:#E7F0FF,stroke:#4D75B8,color:#17345F,stroke-width:1.2px;
+    classDef admin fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.2px;
+    classDef superadmin fill:#F0EAF8,stroke:#7252A3,color:#2E1E4D,stroke-width:1.2px;
+    classDef warning fill:#FDECEC,stroke:#B95B5B,color:#5A1E1E,stroke-width:1.2px;
+    classDef finish fill:#EDF2EF,stroke:#6E8377,color:#1F332A,stroke-width:1.2px;`
+      },
+      'FLOW-08': {
+        id: 'FLOW-08',
+        filename: 'FLOW-08-operasional-super-admin',
+        title: 'Alur Operasional Super Admin',
+        subbab: 'Buku Panduan Subbab 4.1 — Prosedur Masuk & Dashboard Tata Kelola Global',
+        source: `%% FLOW-08 - Alur Operasional Super Admin
+flowchart TD
+    A([Login Super Admin]) --> B[Dashboard Tata Kelola]
+    B --> C{Pilih Kebutuhan}
+
+    C --> D[Identitas Desa & Dusun]
+    C --> E[Data Lintas Dusun]
+    C --> F[Agenda & Pengumuman Desa]
+    C --> G[Monitoring Data & Peta]
+    C --> H[Manajemen Admin Dusun]
+
+    D --> I[Kelola / Monitor Data]
+    E --> I
+    F --> I
+    G --> I
+    H --> I
+
+    I --> J[Periksa Perubahan]
+    J --> K[Simpan Perubahan]
+    K --> L([Selesai])
+
+    E --> M{Data Dinonaktifkan?}
+    M -- Pulihkan --> N[Pulihkan Data]
+    N --> O([Data Aktif Kembali])
+    M -- Hapus Mutlak --> P[Hapus Permanen]
+    P --> Q([Tidak Dapat Dipulihkan])
+
+    class A start
+    class B,D,E,F,G,H,I,J,K process
+    class C,M decision
+    class N,O superadmin
+    class P,Q warning
+    class L finish
+
+    classDef start fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.4px;
+    classDef process fill:#F7FAF8,stroke:#8AA99A,color:#1F332A,stroke-width:1.2px;
+    classDef decision fill:#FFF4D8,stroke:#C48A1B,color:#3B2A04,stroke-width:1.3px;
+    classDef public fill:#E7F0FF,stroke:#4D75B8,color:#17345F,stroke-width:1.2px;
+    classDef admin fill:#EAF7EA,stroke:#2F7D4F,color:#163821,stroke-width:1.2px;
+    classDef superadmin fill:#F0EAF8,stroke:#7252A3,color:#2E1E4D,stroke-width:1.2px;
+    classDef warning fill:#FDECEC,stroke:#B95B5B,color:#5A1E1E,stroke-width:1.2px;
+    classDef finish fill:#EDF2EF,stroke:#6E8377,color:#1F332A,stroke-width:1.2px;`
+      }
+    };
+
+    let currentFlowKey = 'FLOW-01';
+
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'neutral',
+      securityLevel: 'loose',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: false,
+        curve: 'basis'
+      }
+    });
+
+    function switchFlow(flowKey) {
+      currentFlowKey = flowKey;
+      const data = FLOW_DATA[flowKey];
+
+      // Update Tabs
+      document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+        const keys = Object.keys(FLOW_DATA);
+        btn.classList.toggle('active', keys[idx] === flowKey);
+      });
+
+      // Update Meta
+      document.getElementById('meta-badge').textContent = data.id;
+      document.getElementById('meta-title').textContent = data.title;
+      document.getElementById('meta-subbab').textContent = data.subbab;
+
+      // Render Mermaid
+      const container = document.getElementById('diagram-container');
+      container.removeAttribute('data-processed');
+      container.innerHTML = data.source;
+
+      mermaid.run({
+        nodes: [container]
+      });
+    }
+
+    // Initial render
+    window.addEventListener('DOMContentLoaded', () => {
+      switchFlow('FLOW-01');
+    });
+
+    function getPreparedSVG() {
+      const svg = document.querySelector('#diagram-container svg');
+      if (!svg) return null;
+
+      const clone = svg.cloneNode(true);
+      const bbox = svg.getBoundingClientRect();
+      const width = Math.ceil(bbox.width) || 800;
+      const height = Math.ceil(bbox.height) || 600;
+
+      clone.setAttribute('width', width);
+      clone.setAttribute('height', height);
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+
+      // Inject robust font stack for portable vector rendering in Word/PDF
+      const styleEl = document.createElement('style');
+      styleEl.textContent = `
+        text { font-family: Arial, Helvetica, sans-serif !important; }
+        .node text { font-size: 13px !important; font-weight: 500 !important; }
+        .edgeLabel text { font-size: 11px !important; }
+        .cluster-label text { font-size: 12px !important; font-weight: 700 !important; }
+      `;
+      clone.prepend(styleEl);
+
+      return { clone, width, height };
+    }
+
+    function downloadSVG() {
+      const prep = getPreparedSVG();
+      if (!prep) {
+        alert('Diagram SVG belum siap.');
+        return;
+      }
+      const data = FLOW_DATA[currentFlowKey];
+      const serializer = new XMLSerializer();
+      const source = '<?xml version="1.0" standalone="no"?>\r\n' + serializer.serializeToString(prep.clone);
+      const blob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = data.filename + '.svg';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function downloadPNG() {
+      const prep = getPreparedSVG();
+      if (!prep) {
+        alert('Diagram SVG belum siap.');
+        return;
+      }
+      const data = FLOW_DATA[currentFlowKey];
+      const serializer = new XMLSerializer();
+      const svgString = serializer.serializeToString(prep.clone);
+      const svgBase64 = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgString)));
+
+      const img = new Image();
+      img.onload = function() {
+        const scale = 3; // 3x Ultra High Resolution scale for crystal clear printing on A5
+        const canvas = document.createElement('canvas');
+        canvas.width = prep.width * scale;
+        canvas.height = prep.height * scale;
+        const ctx = canvas.getContext('2d');
+
+        // Clean white background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        try {
+          canvas.toBlob(function(blob) {
+            if (blob) {
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = data.filename + '.png';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+            } else {
+              fallbackDataURL(canvas, data.filename);
+            }
+          }, 'image/png');
+        } catch (e) {
+          fallbackDataURL(canvas, data.filename);
+        }
+      };
+
+      img.onerror = function(err) {
+        console.error('Error rendering SVG to image:', err);
+        alert('Gagal mengonversi ke PNG di peramban. Silakan gunakan tombol "Unduh SVG" sebagai format vektor utama.');
+      };
+
+      img.src = svgBase64;
+    }
+
+    function fallbackDataURL(canvas, filename) {
+      const pngURL = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = pngURL;
+      a.download = filename + '.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  </script>
+</body>
+</html>
