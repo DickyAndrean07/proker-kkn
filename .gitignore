@@ -38,6 +38,7 @@ Thumbs.db
 
 
 # Secrets & scratch
+.neon
 /src/template.env
 /confoh_README.md
 /src/public/peta-desa-redesign-options.html
