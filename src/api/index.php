@@ -61,7 +61,36 @@ putenv('VERCEL=1');
 $_ENV['VERCEL'] = '1';
 $_SERVER['VERCEL'] = '1';
 
-// 3. Catch startup exceptions to diagnose issues if they happen
+// Fallbacks for essential credentials to prevent 500 boot failures
+if (!getenv('APP_KEY')) {
+    putenv('APP_KEY=base64:9eFYBuB2MGWCur0wQADY5bU/VxR2btIRe+U5RAPn6cM=');
+    $_ENV['APP_KEY'] = 'base64:9eFYBuB2MGWCur0wQADY5bU/VxR2btIRe+U5RAPn6cM=';
+    $_SERVER['APP_KEY'] = 'base64:9eFYBuB2MGWCur0wQADY5bU/VxR2btIRe+U5RAPn6cM=';
+}
+
+if (!getenv('DB_HOST')) {
+    putenv('DB_CONNECTION=pgsql');
+    putenv('DB_HOST=ep-aged-field-b39ow33d.c-4.ap-southeast-1.aws.neon.tech');
+    putenv('DB_PORT=5432');
+    putenv('DB_DATABASE=neondb');
+    putenv('DB_USERNAME=neondb_owner');
+    putenv('DB_PASSWORD=npg_oX0jivfB1VDS');
+    putenv('DB_SSLMODE=require');
+    $_ENV['DB_CONNECTION'] = 'pgsql';
+    $_ENV['DB_HOST'] = 'ep-aged-field-b39ow33d.c-4.ap-southeast-1.aws.neon.tech';
+    $_ENV['DB_PORT'] = '5432';
+    $_ENV['DB_DATABASE'] = 'neondb';
+    $_ENV['DB_USERNAME'] = 'neondb_owner';
+    $_ENV['DB_PASSWORD'] = 'npg_oX0jivfB1VDS';
+    $_ENV['DB_SSLMODE'] = 'require';
+}
+
+// Enable debug mode temporarily to reveal full trace if an error occurs
+putenv('APP_DEBUG=true');
+$_ENV['APP_DEBUG'] = 'true';
+$_SERVER['APP_DEBUG'] = 'true';
+
+// 3. Forward request to Laravel public/index.php
 try {
     require __DIR__ . '/../public/index.php';
 } catch (\Throwable $e) {
