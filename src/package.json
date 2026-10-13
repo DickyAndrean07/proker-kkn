@@ -3,7 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
+        "build": "vite build && node -e \"const fs = require('fs'); if (fs.existsSync('storage/app/public') && !fs.existsSync('public/storage')) { try { fs.cpSync('storage/app/public', 'public/storage', {recursive: true}); } catch (e) {} }\"",
         "dev": "vite"
     },
     "devDependencies": {
